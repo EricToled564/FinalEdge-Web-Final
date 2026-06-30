@@ -1,0 +1,49 @@
+/* ============================================================================
+   FINAL EDGE — self-hosted fonts (Geist Mono + Geist)
+   Self-hosted (not Google Fonts CDN) for reliability, speed and offline render.
+   Geist Mono leads everything; Geist (sans) only for long dense body copy.
+   ========================================================================= */
+
+/* ---- Geist Mono — the identity typeface ------------------------------- */
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url("../fonts/geist-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal; font-weight: 500; font-display: swap;
+  src: url("../fonts/geist-mono-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal; font-weight: 600; font-display: swap;
+  src: url("../fonts/geist-mono-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal; font-weight: 700; font-display: swap;
+  src: url("../fonts/geist-mono-700.woff2") format("woff2");
+}
+
+/* ---- Geist (sans) — long dense body paragraphs only ------------------- */
+@font-face {
+  font-family: "Geist";
+  font-style: normal; font-weight: 300; font-display: swap;
+  src: url("../fonts/geist-300.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url("../fonts/geist-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal; font-weight: 500; font-display: swap;
+  src: url("../fonts/geist-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal; font-weight: 600; font-display: swap;
+  src: url("../fonts/geist-600.woff2") format("woff2");
+}
