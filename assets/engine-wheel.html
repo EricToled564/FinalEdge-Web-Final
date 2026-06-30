@@ -1,0 +1,86 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0E0E12;--accent:#1E80F0;--fg:#F4F4F2;--eval:#F4920C;--cap:#15D9D9;--exe:#E15CDB;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;
+display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 12px;min-height:100vh}
+.eyebrow{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:#7E7E88;margin:0}
+h1{font-size:clamp(28px,6vw,44px);font-weight:600;letter-spacing:-.04em;margin:2px 0 22px;text-align:center}
+h1 .b{color:var(--accent)}
+/* responsive square: scales the whole 720 stage */
+.scene{width:min(720px,92vw);aspect-ratio:1/1;position:relative}
+.stage{position:absolute;inset:0;width:720px;height:720px;transform-origin:top left}
+svg{position:absolute;inset:0;width:720px;height:720px;overflow:visible}
+.plabel{font-size:15px;font-weight:600;letter-spacing:.18em}
+text{font-family:"Geist Mono",monospace}
+.lock{position:absolute;transform:translate(-50%,-50%);text-align:center;white-space:nowrap;line-height:1.15}
+.lk-row{font-size:16px;font-weight:600} .lk-row .pr{font-size:14px;margin-right:.3em}
+.lk-row .nm{color:var(--fg)} .ai{font-size:14px;font-weight:600;letter-spacing:.12em;margin-top:1px}
+.hubwrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
+.hubwrap .fe{font-size:20px;font-weight:600;letter-spacing:-.02em}
+.hubwrap .fe .pr{color:var(--accent);margin-right:.25em}
+.hubwrap .eng{font-size:16px;font-weight:600;color:var(--accent);letter-spacing:.04em;margin-top:3px}
+/* animation: phase sweep */
+.sector,.band,.plabel,.lock{transition:opacity var(--t,600ms) var(--ease)}
+@keyframes ringspin{to{transform:rotate(360deg)}}
+.ring{transform-origin:360px 360px;animation:ringspin 60s linear infinite}
+@keyframes corepulse{0%,100%{stroke-opacity:.15;r:84}50%{stroke-opacity:.6;r:92}}
+.core{transform-box:fill-box;animation:corepulse 3.2s var(--ease) infinite}
+/* sweep: dim all, light active phase in turn (8.1s loop, 3 phases) */
+.ph-eval,.ph-cap,.ph-exe{opacity:.32}
+@keyframes sw-eval{0%,27%{opacity:1}33%,100%{opacity:.32}}
+@keyframes sw-cap{33%,60%{opacity:1}0%,27%,66%,100%{opacity:.32}}
+@keyframes sw-exe{66%,93%{opacity:1}0%,60%,100%{opacity:.32}}
+.sector.ph-eval,.band.ph-eval,.plabel.ph-eval,.lock.l-eval{animation:sw-eval 8.1s var(--ease) infinite}
+.sector.ph-cap,.band.ph-cap,.plabel.ph-cap,.lock.l-cap{animation:sw-cap 8.1s var(--ease) infinite}
+.sector.ph-exe,.band.ph-exe,.plabel.ph-exe,.lock.l-exe{animation:sw-exe 8.1s var(--ease) infinite}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}.ph-eval,.ph-cap,.ph-exe{opacity:1}}
+.cap{font-size:13px;color:#7E7E88;letter-spacing:.06em;margin-top:18px;text-align:center;max-width:60ch}
+</style></head><body>
+<p class="eyebrow">&gt;_ el motor de final edge</p>
+<h1>El <span class="b">[ENGINE]</span>™</h1>
+<div class="scene"><div class="stage" id="stage">
+<svg viewBox="0 0 720 720"><defs>
+<radialGradient id="g-eval" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#F4920C" stop-opacity="0.05"/><stop offset="70%" stop-color="#F4920C" stop-opacity="0.18"/><stop offset="100%" stop-color="#F4920C" stop-opacity="0.34"/></radialGradient>
+<radialGradient id="g-cap" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#15D9D9" stop-opacity="0.05"/><stop offset="70%" stop-color="#15D9D9" stop-opacity="0.18"/><stop offset="100%" stop-color="#15D9D9" stop-opacity="0.34"/></radialGradient>
+<radialGradient id="g-exe" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#E15CDB" stop-opacity="0.05"/><stop offset="70%" stop-color="#E15CDB" stop-opacity="0.18"/><stop offset="100%" stop-color="#E15CDB" stop-opacity="0.34"/></radialGradient>
+</defs>
+<circle class="ring" cx="360.0" cy="360.0" r="312" fill="none" stroke="#1A1A1E" stroke-width="1.5" stroke-dasharray="2 10"/>
+<path class="sector ph-eval" d="M163.25 237.06 A232 232 0 0 1 351.90 128.14 L356.65 264.06 A96 96 0 0 0 278.59 309.13 Z" fill="url(#g-eval)" stroke="#F4920C" stroke-width="1.5" stroke-opacity="0.85"/>
+<path class="sector ph-eval" d="M368.10 128.14 A232 232 0 0 1 556.75 237.06 L441.41 309.13 A96 96 0 0 0 363.35 264.06 Z" fill="url(#g-eval)" stroke="#F4920C" stroke-width="1.5" stroke-opacity="0.85"/>
+<path class="sector ph-cap" d="M564.84 251.08 A232 232 0 0 1 564.84 468.92 L444.76 405.07 A96 96 0 0 0 444.76 314.93 Z" fill="url(#g-cap)" stroke="#15D9D9" stroke-width="1.5" stroke-opacity="0.85"/>
+<path class="sector ph-cap" d="M556.75 482.94 A232 232 0 0 1 368.10 591.86 L363.35 455.94 A96 96 0 0 0 441.41 410.87 Z" fill="url(#g-cap)" stroke="#15D9D9" stroke-width="1.5" stroke-opacity="0.85"/>
+<path class="sector ph-exe" d="M351.90 591.86 A232 232 0 0 1 163.25 482.94 L278.59 410.87 A96 96 0 0 0 356.65 455.94 Z" fill="url(#g-exe)" stroke="#E15CDB" stroke-width="1.5" stroke-opacity="0.85"/>
+<path class="sector ph-exe" d="M155.16 468.92 A232 232 0 0 1 155.16 251.08 L275.24 314.93 A96 96 0 0 0 275.24 405.07 Z" fill="url(#g-exe)" stroke="#E15CDB" stroke-width="1.5" stroke-opacity="0.85"/>
+<path class="band ph-eval" d="M125.54 210.63 A278 278 0 0 1 594.46 210.63 L569.16 226.75 A248 248 0 0 0 150.84 226.75 Z" fill="#F4920C" stroke="none"/>
+<path class="band ph-cap" d="M606.59 231.63 A278 278 0 0 1 372.13 637.74 L370.82 607.76 A248 248 0 0 0 579.98 245.49 Z" fill="#15D9D9" stroke="none"/>
+<path class="band ph-exe" d="M347.87 637.74 A278 278 0 0 1 113.41 231.63 L140.02 245.49 A248 248 0 0 0 349.18 607.76 Z" fill="#E15CDB" stroke="none"/>
+<text class="plabel ph-eval" x="360.0" y="70.0" fill="#F4920C" text-anchor="middle" dominant-baseline="middle">EVALUACIÓN</text>
+<text class="plabel ph-cap" x="661.4" y="534.0" fill="#15D9D9" text-anchor="middle" dominant-baseline="middle">CAPACIDADES</text>
+<text class="plabel ph-exe" x="67.3" y="529.0" fill="#E15CDB" text-anchor="middle" dominant-baseline="middle">EJECUCIÓN</text>
+<circle class="hub" cx="360.0" cy="360.0" r="84" fill="#0A0A0C" stroke="#1E80F0" stroke-width="1.5"/>
+<circle class="core" cx="360.0" cy="360.0" r="84" fill="none" stroke="#1E80F0" stroke-width="1.5" stroke-opacity="0.6"/></svg>
+<div class="lock l-eval" style="left:38.333%;top:29.793%"><div class="lk-row"><span class="pr" style="color:#F4920C">&gt;_</span><span class="nm">strategy</span></div><div class="ai" style="color:#F4920C">[AI]</div></div>
+<div class="lock l-eval" style="left:61.667%;top:29.793%"><div class="lk-row"><span class="pr" style="color:#F4920C">&gt;_</span><span class="nm">intelligence</span></div><div class="ai" style="color:#F4920C">[AI]</div></div>
+<div class="lock l-cap" style="left:73.333%;top:50.000%"><div class="lk-row"><span class="pr" style="color:#15D9D9">&gt;_</span><span class="nm">readiness</span></div><div class="ai" style="color:#15D9D9">[AI]</div></div>
+<div class="lock l-cap" style="left:61.667%;top:70.207%"><div class="lk-row"><span class="pr" style="color:#15D9D9">&gt;_</span><span class="nm">flow</span></div><div class="ai" style="color:#15D9D9">[AI]</div></div>
+<div class="lock l-exe" style="left:38.333%;top:70.207%"><div class="lk-row"><span class="pr" style="color:#E15CDB">&gt;_</span><span class="nm">systems</span></div><div class="ai" style="color:#E15CDB">[AI]</div></div>
+<div class="lock l-exe" style="left:26.667%;top:50.000%"><div class="lk-row"><span class="pr" style="color:#E15CDB">&gt;_</span><span class="nm">creative</span></div><div class="ai" style="color:#E15CDB">[AI]</div></div>
+<div class="hubwrap"><div class="fe"><span class="pr">&gt;_</span>final edge</div><div class="eng">[ENGINE]</div></div>
+</div></div>
+<p class="cap">3 fases · 6 edges · 1 conversión. Evaluación (strategy · intelligence) · Capacidades (readiness · flow) · Ejecución (systems · creative).</p>
+<script>
+// assign phase class to each lock by its color
+document.querySelectorAll('.lock').forEach(function(l){
+ var c=l.querySelector('.ai').style.color;
+ if(c.indexOf('244')>-1||c.indexOf('#F4920C')>-1){l.classList.add('l-eval')}
+});
+// fit 720 stage into responsive scene
+function fit(){var s=document.querySelector('.scene'),st=document.getElementById('stage');
+ st.style.transform='scale('+(s.clientWidth/720)+')';}
+window.addEventListener('resize',fit);fit();
+</script>
+</body></html>
