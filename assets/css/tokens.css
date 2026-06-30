@@ -1,0 +1,65 @@
+/* ============================================================================
+   FINAL EDGE — DESIGN TOKENS
+   Authoritative, code-first port of the Brand Book (CLAUDE.md §1).
+   Do not invent values. Every token below is traceable to the design system.
+   ========================================================================= */
+
+:root {
+  /* ---- surfaces --------------------------------------------------------- */
+  --bg:           #0E0E12; /* Void — NOT pure black (avoids halation) */
+  --panel:        #0B0B0E;
+  --card:         #0A0A0C;
+  --hairline:     #1A1A1E; /* 1px borders + grid separators */
+  --hairline-nav: #16161A;
+  --placeholder:  #34343C; /* mock "text" bars */
+
+  /* ---- text (all >=4.5:1 on --bg) -------------------------------------- */
+  --fg:        #F4F4F2; /* signal / primary */
+  --fg-2:      #C6C6CC; /* secondary / lead paragraphs */
+  --fg-muted:  #A0A0A8; /* muted */
+  --fg-faint:  #7E7E88; /* faint — 4.79:1, still AA */
+
+  /* ---- accent — the ONLY brand accent for UI --------------------------- */
+  --accent:        #1E80F0; /* Edge Blue */
+  --accent-active: #1668C2; /* -10% L for :active */
+
+  /* ---- phase colors — markers / ENGINE wheel / icons ONLY -------------- */
+  --phase-eval: #F4920C; /* Evaluación  (amber)   */
+  --phase-cap:  #15D9D9; /* Capacidades (cyan)    */
+  --phase-exe:  #E15CDB; /* Ejecución   (magenta) */
+
+  /* ---- semantic / state — independent of phase colors ------------------ */
+  --color-error:   #FF5A5A;
+  --color-success: #3DD68C;
+  --color-warning: #F5C24B;
+  --color-info:    #1E80F0;
+
+  /* ---- type families ---------------------------------------------------- */
+  --font-ui:   "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace; /* leads EVERYTHING */
+  --font-read: "Geist", system-ui, -apple-system, sans-serif;               /* ONLY long dense body */
+
+  /* ---- type scale (Geist Mono) ----------------------------------------- */
+  --text-display:   clamp(56px, 13vw, 176px); /* H1 · 600 · -.06em · lh .82 */
+  --text-opener:    clamp(44px, 9vw, 104px);  /* section number · 600 · -.06em · accent */
+  --text-h2:        clamp(30px, 6vw, 56px);   /* 500 · -.035em */
+  --text-manifesto: clamp(22px, 4.4vw, 38px); /* 400 · -.025em */
+  --text-plate:     clamp(40px, 11vw, 108px); /* tagline plate · 600 · -.05em */
+  --text-subtitle:  clamp(18px, 2.4vw, 24px);
+  --text-lead:      18px;  /* lh 1.6 · --fg-2 */
+  --text-body:      16px;  /* lh 1.5–1.6 · 14px min */
+  --text-label:     14px;  /* UPPERCASE · tracking .14–.24em · HARD FLOOR */
+
+  /* ---- spacing rhythm --------------------------------------------------- */
+  --pad-section-y: clamp(72px, 12vw, 120px);
+  --pad-section-x: clamp(20px, 6vw, 72px);
+  --content-max:   1080px;
+  --cover-max:     1180px;
+
+  /* ---- motion — one curve, three durations ----------------------------- */
+  --ease:    cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t-hover: 160ms;
+  --t-ui:    280ms;
+  --t-enter: 600ms;
+}
+
+/* The hard floor: nothing renders below 14px. */

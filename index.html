@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title data-i18n="meta.title">Final Edge — La IA ejecuta. La experiencia decide.</title>
+  <meta name="description" data-i18n="meta.desc"
+        content="Firma de consultoría premium potenciada por inteligencia artificial y dirigida por más de 30 años de experiencia de negocio." />
+  <meta name="theme-color" content="#0E0E12" />
+  <link rel="icon" type="image/png" href="assets/img/logos/logo-finaledge.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Final Edge — La IA ejecuta. La experiencia decide." />
+  <meta property="og:description" content="Haz más. Sin contratar más. Consultoría de negocio potenciada por IA y dirigida por talento humano." />
+
+  <!-- Geist Mono (UI, everything) + Geist (long body only) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+  <!-- ====================== HEADER / NAV ====================== -->
+  <header class="site-header">
+    <a class="brand-lockup" href="#top" aria-label="Final Edge — inicio">
+      <img src="assets/img/logos/logo-mono-light.png" alt="final edge [AI]" />
+    </a>
+
+    <nav class="nav-links" aria-label="Principal">
+      <a href="#engine"  data-i18n="nav.engine">El Engine</a>
+      <a href="#talent"  data-i18n="nav.work">Cómo Trabajamos</a>
+      <a href="#cases"   data-i18n="nav.cases">Casos</a>
+      <a href="#about"   data-i18n="nav.about">Nosotros</a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="lang-toggle" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es" aria-pressed="true"
+                data-i18n-attr="aria-label:lang.es.aria">ES</button>
+        <button type="button" data-lang="en" aria-pressed="false"
+                data-i18n-attr="aria-label:lang.en.aria">EN</button>
+      </div>
+      <a class="btn btn-sm" href="#valoracion" data-i18n="nav.cta">Agenda tu valoración</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ====================== HERO (video) ====================== -->
+    <section class="hero" id="hero">
+      <video class="hero__video" autoplay muted loop playsinline preload="auto"
+             poster="assets/img/logos/logo-finaledge.png">
+        <source src="assets/video/hero.mp4" type="video/mp4" />
+      </video>
+      <div class="hero__scrim"></div>
+
+      <div class="hero__inner">
+        <p class="hero__meta" data-i18n="hero.meta">&gt;_ FINAL EDGE · CONSULTORÍA DE NEGOCIO POTENCIADA POR IA</p>
+        <h1>
+          <span data-i18n="hero.h1.a">La IA ejecuta.</span><br />
+          <span data-i18n="hero.h1.b">La experiencia decide</span><span class="dot">.</span>
+        </h1>
+        <p class="hero__sub" data-i18n="hero.sub">Haz más. Sin contratar más.</p>
+        <p class="hero__lead" data-i18n="hero.lead">
+          Final Edge es una firma potenciada por inteligencia artificial y dirigida por visión humana.
+          La IA hace el trabajo pesado; la dirección la pone más de 30 años de experiencia de negocio
+          del lado del cliente.
+        </p>
+        <div class="hero__cta">
+          <a class="btn" href="#valoracion">
+            <span class="prompt">&gt;_</span>
+            <span data-i18n="hero.cta">Agenda tu reunión de valoración</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="btn btn-ghost" href="#engine" data-i18n="hero.cta2">Conoce el Engine</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== COSTS / PROBLEM ====================== -->
+    <section class="section" id="problem">
+      <div class="section__inner">
+        <p class="eyebrow" data-i18n="costs.eyebrow"><span class="prompt">&gt;_</span> EL PROBLEMA</p>
+        <h2 data-i18n="costs.h2">Tus costos suben por ley. Tu productividad, no.</h2>
+        <p class="lead" data-i18n="costs.lead">
+          La jornada de 40 horas ya es ley. El salario mínimo sube cada año. Y quizá ya probaste la
+          inteligencia artificial sin que moviera una sola cifra. El problema no fue la herramienta:
+          fue que nadie la dirigió hacia tu negocio.
+        </p>
+        <ul class="stats">
+          <li>
+            <span class="stat-num"><em>+30%</em></span>
+            <span class="stat-txt" data-i18n="costs.s1.txt">encarece la nómina la reforma de 40 horas</span>
+          </li>
+          <li>
+            <span class="stat-num">38<em>/3%</em></span>
+            <span class="stat-txt" data-i18n="costs.s2.txt">de las empresas usa IA; solo 3% obtiene resultados reales</span>
+          </li>
+          <li>
+            <span class="stat-num"><em>+20%</em></span>
+            <span class="stat-txt" data-i18n="costs.s3.txt">crece cada año el mercado de IA en México</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ====================== THE EDGE ====================== -->
+    <section class="section" id="edge">
+      <div class="section__inner">
+        <p class="eyebrow" data-i18n="edge.eyebrow"><span class="prompt">&gt;_</span> LA VENTAJA</p>
+        <h2 data-i18n="edge.h2">Más IA que las agencias. Más criterio que los técnicos.</h2>
+        <p class="lead" data-i18n="edge.lead">
+          Frente a las agencias y consultoras tradicionales, ejecutamos con IA a una fracción del tiempo
+          y del costo. Frente a los proveedores que lideran con la tecnología, dirigimos con 30 años de
+          experiencia del lado del cliente, decidiendo qué mueve tu margen. No vendemos experimentos:
+          entregamos resultados.
+        </p>
+        <div class="split">
+          <div class="col">
+            <h3><span class="prompt">&gt;_</span><span data-i18n="edge.c1.h">Frente a las agencias</span></h3>
+            <p data-i18n="edge.c1.p">Más rápido y más económico: la IA ejecuta en horas lo que ellas hacen a mano en semanas.</p>
+          </div>
+          <div class="col">
+            <h3><span class="prompt">&gt;_</span><span data-i18n="edge.c2.h">Frente a los técnicos</span></h3>
+            <p data-i18n="edge.c2.p">Más criterio de negocio: la dirección la pone quien pasó tres décadas decidiendo qué mueve el margen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== THE ENGINE ====================== -->
+    <section class="section" id="engine">
+      <div class="section__inner">
+        <p class="eyebrow" data-i18n="engine.eyebrow"><span class="prompt">&gt;_</span> EL FINAL EDGE ENGINE</p>
+        <h2 data-i18n="engine.h2">Un sistema, no una lista de servicios.</h2>
+        <p class="lead" data-i18n="engine.lead">
+          Tres fases que te llevan de “no sé por dónde empezar” a tener la IA funcionando como el motor
+          de tu negocio. Cada fase construye sobre la anterior.
+        </p>
+
+        <div class="phases">
+          <article class="phase" data-phase="eval">
+            <p class="phase__tag" data-i18n="engine.p1.tag">FASE 01 · EVALUACIÓN</p>
+            <h3 class="phase__name" data-i18n="engine.p1.name">Evaluación</h3>
+            <p class="phase__desc" data-i18n="engine.p1.desc">Antes de tocar una herramienta, decidimos dónde la IA mueve tu margen.</p>
+            <div class="phase__edges">
+              <span class="edge"><img src="assets/img/edge-icons/strategy.png" alt="" /><span class="prompt">&gt;_</span> strategy <span class="ai">[AI]</span></span>
+              <span class="edge"><img src="assets/img/edge-icons/intelligence.png" alt="" /><span class="prompt">&gt;_</span> intelligence <span class="ai">[AI]</span></span>
+            </div>
+          </article>
+
+          <article class="phase" data-phase="cap">
+            <p class="phase__tag" data-i18n="engine.p2.tag">FASE 02 · CAPACIDADES</p>
+            <h3 class="phase__name" data-i18n="engine.p2.name">Capacidades</h3>
+            <p class="phase__desc" data-i18n="engine.p2.desc">Preparamos a tu gente y tus procesos para que la IA aterrice de verdad.</p>
+            <div class="phase__edges">
+              <span class="edge"><img src="assets/img/edge-icons/readiness.png" alt="" /><span class="prompt">&gt;_</span> readiness <span class="ai">[AI]</span></span>
+              <span class="edge"><img src="assets/img/edge-icons/flow.png" alt="" /><span class="prompt">&gt;_</span> flow <span class="ai">[AI]</span></span>
+            </div>
+          </article>
+
+          <article class="phase" data-phase="exe">
+            <p class="phase__tag" data-i18n="engine.p3.tag">FASE 03 · EJECUCIÓN</p>
+            <h3 class="phase__name" data-i18n="engine.p3.name">Ejecución</h3>
+            <p class="phase__desc" data-i18n="engine.p3.desc">Construimos, desplegamos y producimos para que la IA empiece a trabajar.</p>
+            <div class="phase__edges">
+              <span class="edge"><img src="assets/img/edge-icons/systems.png" alt="" /><span class="prompt">&gt;_</span> systems <span class="ai">[AI]</span></span>
+              <span class="edge"><img src="assets/img/edge-icons/creative.png" alt="" /><span class="prompt">&gt;_</span> creative <span class="ai">[AI]</span></span>
+            </div>
+          </article>
+        </div>
+
+        <div class="cta-row">
+          <a class="btn" href="#valoracion">
+            <span class="prompt">&gt;_</span>
+            <span data-i18n="engine.cta">Conoce el Engine</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== TALENT / HOW WE WORK ====================== -->
+    <section class="section" id="talent">
+      <div class="section__inner">
+        <p class="eyebrow" data-i18n="talent.eyebrow"><span class="prompt">&gt;_</span> CÓMO TRABAJAMOS</p>
+        <h2 data-i18n="talent.h2">El mejor talento del mundo, reunido para tu proyecto.</h2>
+        <p class="lead" data-i18n="talent.lead">
+          Sin el peso ni el costo de una agencia tradicional. Para cada reto armamos un equipo a la
+          medida con talento internacional, evaluado y seleccionado por habilidad.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-ghost" href="#valoracion" data-i18n="talent.cta">Conoce cómo trabajamos</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== ABOUT ====================== -->
+    <section class="section" id="about">
+      <div class="section__inner">
+        <p class="eyebrow" data-i18n="about.eyebrow"><span class="prompt">&gt;_</span> NOSOTROS</p>
+        <h2 data-i18n="about.h2">30 años del lado del cliente. La experiencia que dirige la IA.</h2>
+        <p class="lead" data-i18n="about.lead">
+          La diferencia no es el modelo de inteligencia artificial: es quién lo dirige. Liderazgo de
+          marketing en marcas globales de consumo y bebidas, en siete países de cuatro continentes.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-ghost" href="#valoracion" data-i18n="about.cta">Conoce a la dirección</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== CASES ====================== -->
+    <section class="section" id="cases">
+      <div class="section__inner">
+        <p class="eyebrow" data-i18n="cases.eyebrow"><span class="prompt">&gt;_</span> CASOS</p>
+        <h2 data-i18n="cases.h2">Trabajo real, entregado a clientes reales.</h2>
+        <p class="lead" data-i18n="cases.lead">
+          Investigaciones de mercado, comparativos de precios, marcos estratégicos, tableros financieros,
+          inteligencia de inventarios y campañas audiovisuales.
+        </p>
+        <ul class="cases">
+          <li data-i18n="cases.c1" data-i18n-html><strong>Sports World México</strong> — auditoría de posicionamiento en buscadores y campañas audiovisuales.</li>
+          <li data-i18n="cases.c2" data-i18n-html><strong>Hoteles VLU</strong> — comparativo de precios y paquetes en hospitalidad de lujo.</li>
+          <li data-i18n="cases.c3" data-i18n-html><strong>Kanguru Beverages</strong> — tablero financiero con analista de IA integrado.</li>
+          <li data-i18n="cases.c4" data-i18n-html><strong>Tiendas Chedraui</strong> — inteligencia de inventarios en tiempo real.</li>
+          <li data-i18n="cases.c5" data-i18n-html><strong>Growth Hub</strong> — CRM comercial a la medida con lead scoring de IA.</li>
+          <li data-i18n="cases.c6" data-i18n-html><strong>Tienda de mascotas · Hong Kong</strong> — marco estratégico completo.</li>
+        </ul>
+        <div class="cta-row">
+          <a class="btn btn-ghost" href="#cases" data-i18n="cases.cta">Ver casos</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== ACCENT PLATE (single full-bleed) ============ -->
+    <section class="plate" id="valoracion">
+      <div class="plate__inner">
+        <h2>
+          <span data-i18n="plate.h2.a">La competencia te entrega promedio.</span><br />
+          <span data-i18n="plate.h2.b">Final Edge te entrega la ventaja</span><span class="dot">.</span>
+        </h2>
+        <p data-i18n="plate.p">
+          Empieza por una reunión de valoración. Nuestro asistente de IA te acompaña, resuelve tus dudas
+          y te ayuda a agendar en minutos.
+        </p>
+        <a class="btn" href="#valoracion">
+          <span class="prompt">&gt;_</span>
+          <span data-i18n="plate.cta">Agenda tu reunión de valoración</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====================== FOOTER ====================== -->
+  <footer class="site-footer">
+    <div class="footer__inner">
+      <div class="footer__mark">
+        <img src="assets/img/logos/logo-mono-light.png" alt="final edge [AI]" />
+      </div>
+      <p class="footer__tag" data-i18n="footer.tag">La IA ejecuta. La experiencia decide.</p>
+
+      <nav class="footer__nav" aria-label="Pie de página">
+        <a href="#engine"     data-i18n="footer.nav.engine">El Engine</a>
+        <a href="#talent"     data-i18n="footer.nav.work">Cómo Trabajamos</a>
+        <a href="#cases"      data-i18n="footer.nav.clients">Clientes</a>
+        <a href="#cases"      data-i18n="footer.nav.cases">Casos</a>
+        <a href="#about"      data-i18n="footer.nav.about">Nosotros</a>
+        <a href="#about"      data-i18n="footer.nav.insights">Insights</a>
+        <a href="#valoracion" data-i18n="footer.nav.cta">Valoración</a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" data-i18n="footer.linkedin">LinkedIn del fundador</a>
+      </nav>
+
+      <div class="footer__meta">
+        <span data-i18n="footer.rights">© 2026 FINAL EDGE · IA DIRIGIDA POR NEGOCIO · MÉXICO</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
