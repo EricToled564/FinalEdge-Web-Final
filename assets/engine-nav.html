@@ -1,0 +1,100 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="css/fonts.css">
+<style>
+:root{--bg:#0E0E12;--accent:#1E80F0;--fg:#F4F4F2;--mut:#A0A0A8;--faint:#7E7E88;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:34px 12px}
+.eyebrow{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+h1{font-size:clamp(26px,5vw,40px);font-weight:600;letter-spacing:-.04em;margin:4px 0 4px;text-align:center}
+h1 .b{color:var(--accent)}
+.hint{font-size:13px;color:var(--faint);letter-spacing:.04em;margin-bottom:14px}
+.scene{width:min(680px,92vw);aspect-ratio:1/1;position:relative}
+.stagewrap{position:absolute;inset:0;width:720px;height:720px;transform-origin:top left}
+/* the rotating ring (igloo orbital) */
+.wheelrot{position:absolute;inset:0;transform:rotate(var(--rot,0deg));transition:transform 850ms var(--ease)}
+svg{position:absolute;inset:0;width:720px;height:720px;overflow:visible}
+.sector,.band{transition:opacity 600ms var(--ease)}
+.dim .sector,.dim .band{opacity:.22}
+.sector.on{opacity:1} .band.on{opacity:1}
+/* orbiting lockups; text counter-rotates to stay upright */
+.lock{position:absolute;transform:translate(-50%,-50%);background:none;border:0;cursor:pointer;padding:6px}
+.lk{display:inline-grid;grid-template-columns:auto auto;column-gap:.32em;align-items:baseline;white-space:nowrap;line-height:1.12;
+ transform:rotate(var(--counter,0deg));transition:transform 850ms var(--ease),opacity 500ms var(--ease),filter 300ms var(--ease)}
+.lk .pr{grid-column:1;grid-row:1;font-size:14px;font-weight:600;color:var(--col)}
+.lk .nm{grid-column:2;grid-row:1;font-size:16px;font-weight:600;color:var(--fg)}
+.lk .ai{grid-column:2;grid-row:2;justify-self:start;font-size:14px;font-weight:600;color:var(--col)}
+.dim .lock .lk{opacity:.4;filter:grayscale(.3)}
+.lock.on .lk{opacity:1;filter:none}
+.lock.on .lk .nm{text-shadow:0 0 18px var(--col)}
+/* top focal marker */
+.pointer{position:absolute;left:50%;top:calc(50% - 300px);transform:translateX(-50%);width:0;height:0;
+ border-left:9px solid transparent;border-right:9px solid transparent;border-top:13px solid var(--accent);z-index:6}
+.pointer::after{content:"";position:absolute;left:50%;top:-34px;transform:translateX(-50%);width:1px;height:22px;background:var(--accent);opacity:.5}
+/* fixed center hub with active info */
+.hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:208px;height:208px;border-radius:50%;
+ background:#0A0A0C;border:1.5px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:5;padding:0 18px}
+.hub .fe{font-size:14px;color:var(--mut);letter-spacing:-.01em}.hub .fe .pr{color:var(--accent)}
+.hub .act{font-size:22px;font-weight:600;letter-spacing:-.03em;margin:6px 0 2px;color:var(--col,#fff)}
+.hub .lab{font-size:13px;color:var(--mut);min-height:32px;display:flex;align-items:center}
+.hub .go{margin-top:6px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.foot{font-size:13px;color:var(--faint);margin-top:18px;text-align:center;max-width:60ch;line-height:1.5}
+</style></head><body>
+<p class="eyebrow">&gt;_ navegación · el motor</p>
+<h1>El <span class="b">[ENGINE]</span> es el menú</h1>
+<p class="hint">Pasa por cada edge o usa las teclas ← → · el wheel gira y lo lleva al foco</p>
+<div class="scene"><div class="stagewrap" id="stage">
+<div class="pointer"></div>
+<div class="wheelrot" id="wheelrot"><svg viewBox="0 0 720 720" id="svg"><defs>
+<radialGradient id="g-eval" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#F4920C" stop-opacity="0.05"/><stop offset="70%" stop-color="#F4920C" stop-opacity="0.20"/><stop offset="100%" stop-color="#F4920C" stop-opacity="0.40"/></radialGradient>
+<radialGradient id="g-cap" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#15D9D9" stop-opacity="0.05"/><stop offset="70%" stop-color="#15D9D9" stop-opacity="0.20"/><stop offset="100%" stop-color="#15D9D9" stop-opacity="0.40"/></radialGradient>
+<radialGradient id="g-exe" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#E15CDB" stop-opacity="0.05"/><stop offset="70%" stop-color="#E15CDB" stop-opacity="0.20"/><stop offset="100%" stop-color="#E15CDB" stop-opacity="0.40"/></radialGradient>
+</defs>
+<circle class="ring" cx="360.0" cy="360.0" r="312" fill="none" stroke="#1A1A1E" stroke-width="1.5" stroke-dasharray="2 10"/>
+<path id="sec-strategy" class="sector" data-ph="eval" d="M163.25 237.06 A232 232 0 0 1 351.90 128.14 L356.65 264.06 A96 96 0 0 0 278.59 309.13 Z" fill="url(#g-eval)" stroke="#F4920C" stroke-width="1.5" stroke-opacity="0.85"/>
+<path id="sec-intelligence" class="sector" data-ph="eval" d="M368.10 128.14 A232 232 0 0 1 556.75 237.06 L441.41 309.13 A96 96 0 0 0 363.35 264.06 Z" fill="url(#g-eval)" stroke="#F4920C" stroke-width="1.5" stroke-opacity="0.85"/>
+<path id="sec-readiness" class="sector" data-ph="cap" d="M564.84 251.08 A232 232 0 0 1 564.84 468.92 L444.76 405.07 A96 96 0 0 0 444.76 314.93 Z" fill="url(#g-cap)" stroke="#15D9D9" stroke-width="1.5" stroke-opacity="0.85"/>
+<path id="sec-flow" class="sector" data-ph="cap" d="M556.75 482.94 A232 232 0 0 1 368.10 591.86 L363.35 455.94 A96 96 0 0 0 441.41 410.87 Z" fill="url(#g-cap)" stroke="#15D9D9" stroke-width="1.5" stroke-opacity="0.85"/>
+<path id="sec-systems" class="sector" data-ph="exe" d="M351.90 591.86 A232 232 0 0 1 163.25 482.94 L278.59 410.87 A96 96 0 0 0 356.65 455.94 Z" fill="url(#g-exe)" stroke="#E15CDB" stroke-width="1.5" stroke-opacity="0.85"/>
+<path id="sec-creative" class="sector" data-ph="exe" d="M155.16 468.92 A232 232 0 0 1 155.16 251.08 L275.24 314.93 A96 96 0 0 0 275.24 405.07 Z" fill="url(#g-exe)" stroke="#E15CDB" stroke-width="1.5" stroke-opacity="0.85"/>
+<path class="band" data-ph="eval" d="M125.54 210.63 A278 278 0 0 1 594.46 210.63 L569.16 226.75 A248 248 0 0 0 150.84 226.75 Z" fill="#F4920C"/>
+<path class="band" data-ph="cap" d="M606.59 231.63 A278 278 0 0 1 372.13 637.74 L370.82 607.76 A248 248 0 0 0 579.98 245.49 Z" fill="#15D9D9"/>
+<path class="band" data-ph="exe" d="M347.87 637.74 A278 278 0 0 1 113.41 231.63 L140.02 245.49 A248 248 0 0 0 349.18 607.76 Z" fill="#E15CDB"/></svg>
+<button id="lock-strategy" class="lock" data-name="strategy" data-ph="eval" data-lab="Estrategia" data-ang="330" style="left:38.333%;top:29.793%;--col:#F4920C"><span class="lk"><span class="pr">&gt;_</span><span class="nm">strategy</span><span class="ai">[AI]</span></span></button>
+<button id="lock-intelligence" class="lock" data-name="intelligence" data-ph="eval" data-lab="Business Intelligence" data-ang="30" style="left:61.667%;top:29.793%;--col:#F4920C"><span class="lk"><span class="pr">&gt;_</span><span class="nm">intelligence</span><span class="ai">[AI]</span></span></button>
+<button id="lock-readiness" class="lock" data-name="readiness" data-ph="cap" data-lab="Team Readiness" data-ang="90" style="left:73.333%;top:50.000%;--col:#15D9D9"><span class="lk"><span class="pr">&gt;_</span><span class="nm">readiness</span><span class="ai">[AI]</span></span></button>
+<button id="lock-flow" class="lock" data-name="flow" data-ph="cap" data-lab="Optimización de Procesos" data-ang="150" style="left:61.667%;top:70.207%;--col:#15D9D9"><span class="lk"><span class="pr">&gt;_</span><span class="nm">flow</span><span class="ai">[AI]</span></span></button>
+<button id="lock-systems" class="lock" data-name="systems" data-ph="exe" data-lab="Sistemas" data-ang="210" style="left:38.333%;top:70.207%;--col:#E15CDB"><span class="lk"><span class="pr">&gt;_</span><span class="nm">systems</span><span class="ai">[AI]</span></span></button>
+<button id="lock-creative" class="lock" data-name="creative" data-ph="exe" data-lab="Producción Creativa" data-ang="270" style="left:26.667%;top:50.000%;--col:#E15CDB"><span class="lk"><span class="pr">&gt;_</span><span class="nm">creative</span><span class="ai">[AI]</span></span></button></div>
+<div class="hub" id="hub"><div class="fe"><span class="pr">&gt;_</span> final edge</div>
+ <div class="act" id="act">strategy</div><div class="lab" id="lab">Estrategia</div>
+ <div class="go">Entrar →</div></div>
+</div></div>
+<p class="foot">El wheel funciona como navegación radial: cada edge es un destino, el activo se fija arriba y enciende su fase; el resto se atenúa. Misma lógica de Igloo, con tu sistema.</p>
+<script>
+var EDGES=['strategy', 'intelligence', 'readiness', 'flow', 'systems', 'creative'];
+var DATA=[{name:"strategy",ang:330,ph:"eval",lab:"Estrategia",col:"#F4920C"},{name:"intelligence",ang:30,ph:"eval",lab:"Business Intelligence",col:"#F4920C"},{name:"readiness",ang:90,ph:"cap",lab:"Team Readiness",col:"#15D9D9"},{name:"flow",ang:150,ph:"cap",lab:"Optimización de Procesos",col:"#15D9D9"},{name:"systems",ang:210,ph:"exe",lab:"Sistemas",col:"#E15CDB"},{name:"creative",ang:270,ph:"exe",lab:"Producción Creativa",col:"#E15CDB"}];
+var stage=document.getElementById('stage'),wheel=document.getElementById('wheelrot');
+var hub=document.getElementById('hub'),act=document.getElementById('act'),lab=document.getElementById('lab');
+var i=0;
+function setActive(idx){
+ idx=(idx+DATA.length)%DATA.length; i=idx; var d=DATA[idx];
+ var rot=-d.ang;                                   // bring sector center to top
+ wheel.style.setProperty('--rot',rot+'deg');
+ document.querySelectorAll('.lk').forEach(function(el){el.style.setProperty('--counter',(-rot)+'deg');});
+ wheel.classList.add('dim');
+ document.querySelectorAll('.sector,.band,.lock').forEach(function(el){el.classList.remove('on');});
+ document.getElementById('sec-'+d.name).classList.add('on');
+ document.querySelector('.band[data-ph="'+d.ph+'"]').classList.add('on');
+ document.getElementById('lock-'+d.name).classList.add('on');
+ act.textContent=d.name; act.style.setProperty('--col',d.col); hub.style.setProperty('--col',d.col);
+ hub.style.borderColor=d.col; lab.textContent=d.lab;
+}
+document.querySelectorAll('.lock').forEach(function(b,idx){
+ b.addEventListener('mouseenter',function(){setActive(idx);});
+ b.addEventListener('click',function(){setActive(idx);});
+});
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')setActive(i+1);if(e.key==='ArrowLeft')setActive(i-1);});
+function fit(){var s=document.querySelector('.scene');stage.style.transform='scale('+(s.clientWidth/720)+')';}
+window.addEventListener('resize',fit);fit();setActive(0);
+</script></body></html>
