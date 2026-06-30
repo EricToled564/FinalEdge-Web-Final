@@ -5,31 +5,31 @@
 <style>
 :root{--bg:#0E0E12;--accent:#1E80F0;--fg:#F4F4F2;--eval:#F4920C;--cap:#15D9D9;--exe:#E15CDB;--ease:cubic-bezier(.2,.8,.2,1)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;
-display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 12px;min-height:100vh}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 12px;min-height:100vh}
 .eyebrow{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:#7E7E88;margin:0}
 h1{font-size:clamp(28px,6vw,44px);font-weight:600;letter-spacing:-.04em;margin:2px 0 22px;text-align:center}
 h1 .b{color:var(--accent)}
-/* responsive square: scales the whole 720 stage */
 .scene{width:min(720px,92vw);aspect-ratio:1/1;position:relative}
 .stage{position:absolute;inset:0;width:720px;height:720px;transform-origin:top left}
 svg{position:absolute;inset:0;width:720px;height:720px;overflow:visible}
-.plabel{font-size:15px;font-weight:600;letter-spacing:.18em}
-text{font-family:"Geist Mono",monospace}
-.lock{position:absolute;transform:translate(-50%,-50%);text-align:center;white-space:nowrap;line-height:1.15}
-.lk-row{font-size:16px;font-weight:600} .lk-row .pr{font-size:14px;margin-right:.3em}
-.lk-row .nm{color:var(--fg)} .ai{font-size:14px;font-weight:600;letter-spacing:.12em;margin-top:1px}
-.hubwrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
-.hubwrap .fe{font-size:20px;font-weight:600;letter-spacing:-.02em}
-.hubwrap .fe .pr{color:var(--accent);margin-right:.25em}
-.hubwrap .eng{font-size:16px;font-weight:600;color:var(--accent);letter-spacing:.04em;margin-top:3px}
-/* animation: phase sweep */
-.sector,.band,.plabel,.lock{transition:opacity var(--t,600ms) var(--ease)}
-@keyframes ringspin{to{transform:rotate(360deg)}}
+.plabel{font-size:15px;font-weight:600;letter-spacing:.18em;font-family:"Geist Mono",monospace}
+/* edge lockup: [AI] left-aligned to the name's first letter */
+.lock{position:absolute;transform:translate(-50%,-50%);display:inline-grid;
+ grid-template-columns:auto auto;column-gap:.32em;align-items:baseline;white-space:nowrap;line-height:1.12}
+.lock .pr{grid-column:1;grid-row:1;font-size:14px;font-weight:600}
+.lock .nm{grid-column:2;grid-row:1;font-size:16px;font-weight:600;color:var(--fg)}
+.lock .ai{grid-column:2;grid-row:2;justify-self:start;font-size:14px;font-weight:600;letter-spacing:.1em;margin-top:1px}
+/* hub: [ENGINE] left bracket aligned to the "f" of final */
+.hubwrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-grid;
+ grid-template-columns:auto auto;column-gap:.26em;align-items:baseline}
+.hubwrap .pr{grid-column:1;grid-row:1;color:var(--accent);font-size:18px;font-weight:600}
+.hubwrap .fe{grid-column:2;grid-row:1;font-size:19px;font-weight:600;letter-spacing:-.02em}
+.hubwrap .eng{grid-column:2;grid-row:2;justify-self:start;font-size:15px;font-weight:600;color:var(--accent);letter-spacing:.02em;margin-top:3px}
 .ring{transform-origin:360px 360px;animation:ringspin 60s linear infinite}
-@keyframes corepulse{0%,100%{stroke-opacity:.15;r:84}50%{stroke-opacity:.6;r:92}}
+@keyframes ringspin{to{transform:rotate(360deg)}}
 .core{transform-box:fill-box;animation:corepulse 3.2s var(--ease) infinite}
-/* sweep: dim all, light active phase in turn (8.1s loop, 3 phases) */
+@keyframes corepulse{0%,100%{stroke-opacity:.15;r:84}50%{stroke-opacity:.6;r:92}}
+.sector,.band,.plabel,.lock{transition:opacity 600ms var(--ease)}
 .ph-eval,.ph-cap,.ph-exe{opacity:.32}
 @keyframes sw-eval{0%,27%{opacity:1}33%,100%{opacity:.32}}
 @keyframes sw-cap{33%,60%{opacity:1}0%,27%,66%,100%{opacity:.32}}
@@ -63,24 +63,17 @@ text{font-family:"Geist Mono",monospace}
 <text class="plabel ph-exe" x="67.3" y="529.0" fill="#E15CDB" text-anchor="middle" dominant-baseline="middle">EJECUCIÓN</text>
 <circle class="hub" cx="360.0" cy="360.0" r="84" fill="#0A0A0C" stroke="#1E80F0" stroke-width="1.5"/>
 <circle class="core" cx="360.0" cy="360.0" r="84" fill="none" stroke="#1E80F0" stroke-width="1.5" stroke-opacity="0.6"/></svg>
-<div class="lock l-eval" style="left:38.333%;top:29.793%"><div class="lk-row"><span class="pr" style="color:#F4920C">&gt;_</span><span class="nm">strategy</span></div><div class="ai" style="color:#F4920C">[AI]</div></div>
-<div class="lock l-eval" style="left:61.667%;top:29.793%"><div class="lk-row"><span class="pr" style="color:#F4920C">&gt;_</span><span class="nm">intelligence</span></div><div class="ai" style="color:#F4920C">[AI]</div></div>
-<div class="lock l-cap" style="left:73.333%;top:50.000%"><div class="lk-row"><span class="pr" style="color:#15D9D9">&gt;_</span><span class="nm">readiness</span></div><div class="ai" style="color:#15D9D9">[AI]</div></div>
-<div class="lock l-cap" style="left:61.667%;top:70.207%"><div class="lk-row"><span class="pr" style="color:#15D9D9">&gt;_</span><span class="nm">flow</span></div><div class="ai" style="color:#15D9D9">[AI]</div></div>
-<div class="lock l-exe" style="left:38.333%;top:70.207%"><div class="lk-row"><span class="pr" style="color:#E15CDB">&gt;_</span><span class="nm">systems</span></div><div class="ai" style="color:#E15CDB">[AI]</div></div>
-<div class="lock l-exe" style="left:26.667%;top:50.000%"><div class="lk-row"><span class="pr" style="color:#E15CDB">&gt;_</span><span class="nm">creative</span></div><div class="ai" style="color:#E15CDB">[AI]</div></div>
-<div class="hubwrap"><div class="fe"><span class="pr">&gt;_</span>final edge</div><div class="eng">[ENGINE]</div></div>
+<div class="lock l-eval" style="left:38.333%;top:29.793%"><span class="pr" style="color:#F4920C">&gt;_</span><span class="nm">strategy</span><span class="ai" style="color:#F4920C">[AI]</span></div>
+<div class="lock l-eval" style="left:61.667%;top:29.793%"><span class="pr" style="color:#F4920C">&gt;_</span><span class="nm">intelligence</span><span class="ai" style="color:#F4920C">[AI]</span></div>
+<div class="lock l-cap" style="left:73.333%;top:50.000%"><span class="pr" style="color:#15D9D9">&gt;_</span><span class="nm">readiness</span><span class="ai" style="color:#15D9D9">[AI]</span></div>
+<div class="lock l-cap" style="left:61.667%;top:70.207%"><span class="pr" style="color:#15D9D9">&gt;_</span><span class="nm">flow</span><span class="ai" style="color:#15D9D9">[AI]</span></div>
+<div class="lock l-exe" style="left:38.333%;top:70.207%"><span class="pr" style="color:#E15CDB">&gt;_</span><span class="nm">systems</span><span class="ai" style="color:#E15CDB">[AI]</span></div>
+<div class="lock l-exe" style="left:26.667%;top:50.000%"><span class="pr" style="color:#E15CDB">&gt;_</span><span class="nm">creative</span><span class="ai" style="color:#E15CDB">[AI]</span></div>
+<div class="hubwrap"><span class="pr">&gt;_</span><span class="fe">final edge</span><span class="eng">[ENGINE]</span></div>
 </div></div>
 <p class="cap">3 fases · 6 edges · 1 conversión. Evaluación (strategy · intelligence) · Capacidades (readiness · flow) · Ejecución (systems · creative).</p>
 <script>
-// assign phase class to each lock by its color
-document.querySelectorAll('.lock').forEach(function(l){
- var c=l.querySelector('.ai').style.color;
- if(c.indexOf('244')>-1||c.indexOf('#F4920C')>-1){l.classList.add('l-eval')}
-});
-// fit 720 stage into responsive scene
-function fit(){var s=document.querySelector('.scene'),st=document.getElementById('stage');
- st.style.transform='scale('+(s.clientWidth/720)+')';}
+function fit(){var s=document.querySelector('.scene'),st=document.getElementById('stage');st.style.transform='scale('+(s.clientWidth/720)+')';}
 window.addEventListener('resize',fit);fit();
 </script>
 </body></html>
