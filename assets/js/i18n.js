@@ -19,7 +19,7 @@ window.FE_I18N = {
     "lang.es.aria": "Cambiar a español",
     "lang.en.aria": "Switch to English",
 
-    "hero.meta": ">_ FINAL EDGE · CONSULTORÍA DE NEGOCIO POTENCIADA POR IA",
+    "hero.meta": "Consultoría de negocio potenciada por IA",
     "hero.h1.a": "La IA ejecuta.",
     "hero.h1.b": "La experiencia decide",
     "hero.sub": "Haz más. Sin contratar más.",
@@ -112,7 +112,7 @@ window.FE_I18N = {
     "lang.es.aria": "Cambiar a español",
     "lang.en.aria": "Switch to English",
 
-    "hero.meta": ">_ FINAL EDGE · AI-POWERED BUSINESS CONSULTING",
+    "hero.meta": "AI-powered business consulting",
     "hero.h1.a": "AI executes.",
     "hero.h1.b": "Experience decides",
     "hero.sub": "Do more. Without hiring more.",

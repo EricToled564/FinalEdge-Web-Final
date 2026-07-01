@@ -61,7 +61,8 @@ button { font-family: inherit; cursor: pointer; }
   border-bottom: 1px solid var(--hairline-nav);
 }
 .brand-lockup { display: flex; align-items: center; }
-.brand-lockup img { height: 30px; width: auto; }
+/* Brand-book minimum: logo digital >=160px wide (master aspect 3.7 -> ~43px tall). */
+.brand-lockup img { width: 160px; height: auto; }
 
 .header-actions { display: flex; align-items: center; gap: 8px; }
 
@@ -141,20 +142,25 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   inset: 0;
   z-index: -1;
+  /* Dim the decorative video to an ambient texture: logo reads faintly up top,
+     the lower band is near-solid so text can NEVER collide with the 3D letters. */
   background:
-    linear-gradient(to top, rgba(14,14,18,.94) 0%, rgba(14,14,18,.64) 28%, rgba(14,14,18,.30) 48%, rgba(14,14,18,0) 68%),
-    linear-gradient(105deg, rgba(14,14,18,.72) 0%, rgba(14,14,18,.22) 44%, rgba(14,14,18,0) 68%),
-    rgba(14,14,18,.18);
+    linear-gradient(to top,
+      rgba(14,14,18,.97) 0%,
+      rgba(14,14,18,.93) 38%,
+      rgba(14,14,18,.72) 62%,
+      rgba(14,14,18,.50) 100%);
 }
 .hero__inner { max-width: 660px; width: 100%; }
 .hero__meta {
   font-size: 13px;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--fg-muted);
   font-weight: 500;
   margin: 0 0 22px;
 }
+.hero__meta .prompt { color: var(--accent); margin-right: .5em; }
 .hero h1 {
   font-size: clamp(38px, 7.2vw, 56px);
   font-weight: 500;
@@ -364,7 +370,7 @@ button { font-family: inherit; cursor: pointer; }
   background: var(--panel);
 }
 .footer__inner { max-width: var(--content-max); margin: 0 auto; }
-.footer__mark img { height: 34px; width: auto; margin-bottom: 18px; }
+.footer__mark img { width: 200px; height: auto; margin-bottom: 22px; }
 .footer__tag { font-size: var(--text-subtitle); color: var(--fg-2); margin: 0 0 28px; letter-spacing: -.02em; }
 .footer__nav {
   display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
@@ -410,7 +416,7 @@ button { font-family: inherit; cursor: pointer; }
    DESKTOP  (>= 880px)  — progressive enhancement of the mobile-first base
    ========================================================================= */
 @media (min-width: 880px) {
-  .brand-lockup img { height: 34px; }
+  .brand-lockup img { width: 184px; }
   .nav-links {
     display: flex; align-items: center; gap: clamp(14px, 2vw, 28px);
   }
