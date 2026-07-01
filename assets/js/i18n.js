@@ -15,6 +15,7 @@ window.FE_I18N = {
     "nav.cases": "Casos",
     "nav.about": "Nosotros",
     "nav.cta": "Agenda tu valoración",
+    "nav.cta.short": "Valoración",
     "lang.es.aria": "Cambiar a español",
     "lang.en.aria": "Switch to English",
 
@@ -25,6 +26,9 @@ window.FE_I18N = {
     "hero.lead": "Final Edge es una firma potenciada por inteligencia artificial y dirigida por visión humana. La IA hace el trabajo pesado; la dirección la pone más de 30 años de experiencia de negocio del lado del cliente.",
     "hero.cta": "Agenda tu reunión de valoración",
     "hero.cta2": "Conoce el Final Edge Engine",
+    "hero.strip1": "<b>30+</b> años del lado del cliente",
+    "hero.strip2": "IA dirigida por negocio",
+    "hero.strip3": "México · Global",
 
     "costs.eyebrow": ">_ EL PROBLEMA",
     "costs.h2": "Tus costos suben por ley. Tu productividad, no.",
@@ -104,6 +108,7 @@ window.FE_I18N = {
     "nav.cases": "Cases",
     "nav.about": "About",
     "nav.cta": "Book your assessment",
+    "nav.cta.short": "Assessment",
     "lang.es.aria": "Cambiar a español",
     "lang.en.aria": "Switch to English",
 
@@ -114,6 +119,9 @@ window.FE_I18N = {
     "hero.lead": "Final Edge is a firm powered by artificial intelligence and led by human vision. AI does the heavy lifting; direction comes from 30+ years of client-side business experience.",
     "hero.cta": "Book your assessment meeting",
     "hero.cta2": "Explore the Final Edge Engine",
+    "hero.strip1": "<b>30+</b> years client-side",
+    "hero.strip2": "Business-led AI",
+    "hero.strip3": "Mexico · Global",
 
     "costs.eyebrow": ">_ THE PROBLEM",
     "costs.h2": "Your costs rise by law. Your productivity doesn't.",
