@@ -9,7 +9,7 @@ window.FE_I18N = {
     "meta.title": "Final Edge — La IA ejecuta. La experiencia decide.",
     "meta.desc": "Firma de consultoría premium potenciada por inteligencia artificial y dirigida por más de 30 años de experiencia de negocio. Haz más, sin contratar más.",
 
-    "nav.engine": "El Engine",
+    "nav.engine": "Final Edge Engine",
     "nav.work": "Cómo Trabajamos",
     "nav.clients": "Clientes",
     "nav.cases": "Casos",
@@ -24,7 +24,7 @@ window.FE_I18N = {
     "hero.sub": "Haz más. Sin contratar más.",
     "hero.lead": "Final Edge es una firma potenciada por inteligencia artificial y dirigida por visión humana. La IA hace el trabajo pesado; la dirección la pone más de 30 años de experiencia de negocio del lado del cliente.",
     "hero.cta": "Agenda tu reunión de valoración",
-    "hero.cta2": "Conoce el Engine",
+    "hero.cta2": "Conoce el Final Edge Engine",
 
     "costs.eyebrow": ">_ EL PROBLEMA",
     "costs.h2": "Tus costos suben por ley. Tu productividad, no.",
@@ -53,7 +53,7 @@ window.FE_I18N = {
     "engine.p3.tag": "FASE 03 · EJECUCIÓN",
     "engine.p3.name": "Ejecución",
     "engine.p3.desc": "Construimos, desplegamos y producimos para que la IA empiece a trabajar.",
-    "engine.cta": "Conoce el Engine",
+    "engine.cta": "Conoce el Final Edge Engine",
 
     "talent.eyebrow": ">_ CÓMO TRABAJAMOS",
     "talent.h2": "El mejor talento del mundo, reunido para tu proyecto.",
@@ -82,7 +82,7 @@ window.FE_I18N = {
     "plate.cta": "Agenda tu reunión de valoración",
 
     "footer.tag": "La IA ejecuta. La experiencia decide.",
-    "footer.nav.engine": "El Engine",
+    "footer.nav.engine": "Final Edge Engine",
     "footer.nav.work": "Cómo Trabajamos",
     "footer.nav.clients": "Clientes",
     "footer.nav.cases": "Casos",
@@ -98,7 +98,7 @@ window.FE_I18N = {
     "meta.title": "Final Edge — AI executes. Experience decides.",
     "meta.desc": "Premium business consultancy powered by artificial intelligence and led by 30+ years of business experience. Do more, without hiring more.",
 
-    "nav.engine": "The Engine",
+    "nav.engine": "Final Edge Engine",
     "nav.work": "How We Work",
     "nav.clients": "Clients",
     "nav.cases": "Cases",
@@ -113,7 +113,7 @@ window.FE_I18N = {
     "hero.sub": "Do more. Without hiring more.",
     "hero.lead": "Final Edge is a firm powered by artificial intelligence and led by human vision. AI does the heavy lifting; direction comes from 30+ years of client-side business experience.",
     "hero.cta": "Book your assessment meeting",
-    "hero.cta2": "Explore the Engine",
+    "hero.cta2": "Explore the Final Edge Engine",
 
     "costs.eyebrow": ">_ THE PROBLEM",
     "costs.h2": "Your costs rise by law. Your productivity doesn't.",
@@ -142,7 +142,7 @@ window.FE_I18N = {
     "engine.p3.tag": "PHASE 03 · EXECUTION",
     "engine.p3.name": "Execution",
     "engine.p3.desc": "We build, deploy and produce so AI starts working.",
-    "engine.cta": "Explore the Engine",
+    "engine.cta": "Explore the Final Edge Engine",
 
     "talent.eyebrow": ">_ HOW WE WORK",
     "talent.h2": "The best talent in the world, assembled for your project.",
@@ -171,7 +171,7 @@ window.FE_I18N = {
     "plate.cta": "Book your assessment meeting",
 
     "footer.tag": "AI executes. Experience decides.",
-    "footer.nav.engine": "The Engine",
+    "footer.nav.engine": "Final Edge Engine",
     "footer.nav.work": "How We Work",
     "footer.nav.clients": "Clients",
     "footer.nav.cases": "Cases",
