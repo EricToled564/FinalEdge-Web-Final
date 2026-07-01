@@ -43,9 +43,9 @@ const EDGES=[
 ];
 // band labels — exact brand-book radii/angles
 const BANDS=[
- {phase:'eval',hex:AMBER,c:0,name:'EVALUACIÓN',lr:290},
- {phase:'cap', hex:CYAN, c:120,name:'CAPACIDADES',lr:348},
- {phase:'exe', hex:MAG,  c:240,name:'EJECUCIÓN',lr:338},
+ {phase:'eval',hex:AMBER,c:0,name:'EVALUACIÓN',lr:338},
+ {phase:'cap', hex:CYAN, c:120,name:'CAPACIDADES',lr:382},
+ {phase:'exe', hex:MAG,  c:240,name:'EJECUCIÓN',lr:372},
 ];
 
 function P(r,deg){ const a=deg*Math.PI/180; return [r*Math.sin(a), r*Math.cos(a)]; }
@@ -105,9 +105,9 @@ function hubTexture(){
   },cw,ch), aspect:cw/ch};
 }
 function bandTexture(name,hex){
-  const cw=1024,ch=256;
+  const cw=1536,ch=384;
   return {tex:makeTex((x)=>{ x.clearRect(0,0,cw,ch); x.textAlign='center'; x.textBaseline='middle'; shadow(x);
-    x.font=`600 74px "Geist Mono",monospace`; x.letterSpacing='10px'; x.fillStyle=hx(hex); x.fillText(name,cw/2,ch/2);
+    x.font=`600 118px "Geist Mono",monospace`; x.letterSpacing='16px'; x.fillStyle=hx(hex); x.fillText(name,cw/2,ch/2);
   },cw,ch), aspect:cw/ch};
 }
 function plane(o,w,pos,blend){
@@ -133,7 +133,7 @@ BANDS.forEach(b=>{
   mesh.userData={kind:'band',phase:b.phase,hex:b.hex,baseCol:new THREE.Color(b.hex),tEmis:0.12,tLit:1};
   wheel.add(mesh); hitList.push(mesh);
   const lp=P(b.lr,b.c);
-  wheel.add(plane(bandTexture(b.name,b.hex),150,[lp[0],lp[1],D_SEC/2+BEV+2]));
+  wheel.add(plane(bandTexture(b.name,b.hex),440,[lp[0],lp[1],D_SEC/2+BEV+2]));
 });
 
 EDGES.forEach(e=>{
@@ -153,8 +153,8 @@ const core=new THREE.Mesh(new THREE.CylinderGeometry(84,84,D_CORE,96,1),
   new THREE.MeshPhysicalMaterial({color:0x0a0a0d,metalness:0.55,roughness:0.25,clearcoat:0.6,clearcoatRoughness:0.2,envMapIntensity:0.9}));
 core.rotation.x=Math.PI/2; wheel.add(core);
 const hub=plane(hubTexture(),150,[0,0,D_CORE/2+2]); wheel.add(hub);   // centered + large
-const spinRim=new THREE.Mesh(new THREE.TorusGeometry(93,3.4,16,120,Math.PI*1.7),
-  new THREE.MeshStandardMaterial({color:0x1E80F0,emissive:0x1E80F0,emissiveIntensity:1.5,metalness:0.4,roughness:0.3,toneMapped:false}));
+const spinRim=new THREE.Mesh(new THREE.TorusGeometry(93,3.4,20,180),   // full ring (entero)
+  new THREE.MeshStandardMaterial({color:0x1E80F0,emissive:0x1E80F0,emissiveIntensity:1.4,metalness:0.4,roughness:0.3,toneMapped:false}));
 spinRim.position.z=D_CORE/2; wheel.add(spinRim);
 
 wheel.scale.setScalar(S);
@@ -197,7 +197,7 @@ function loop(){
   wheel.position.y=Math.sin(t*0.9)*0.05;
   wheel.rotation.x=Math.sin(t*0.7)*0.05 + my*0.15;
   wheel.rotation.y=Math.sin(t*0.5)*0.06 + mx*0.20;
-  spinRim.rotation.z-=0.014;
+  spinRim.material.emissiveIntensity = 1.2 + Math.sin(t*2.2)*0.5;   // gentle pulse (full ring)
   hitList.forEach(m=>{
     const mat=m.material;
     mat.emissiveIntensity += (m.userData.tEmis-mat.emissiveIntensity)*0.14;
