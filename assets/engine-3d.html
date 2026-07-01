@@ -34,6 +34,9 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
   transition:opacity .3s,transform .28s cubic-bezier(.2,.8,.2,1),filter .28s}
 .labels .plbl.on{transform:translate(-50%,-50%) scale(1.14);filter:drop-shadow(0 0 12px currentColor)}
 .labels .plbl.off{opacity:.4}
+/* stage panels (phase menu / service title) — wired in the next step */
+.bigtitle,.phasemenu{display:none}
+.back{display:none}
 /* hub logo — brand book: prompt 16 · final edge 23 · [ENGINE] 14 */
 .labels .hublbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;display:flex;
   align-items:baseline;gap:.36em;line-height:1;filter:drop-shadow(0 2px 9px rgba(0,0,0,.92))}
@@ -46,9 +49,11 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
 <canvas id="c"></canvas>
 <div class="load" id="load">&gt;_ construyendo el motor <span class="cur">█</span></div>
 <div class="ui">
-  <div class="top"><div class="eye">&gt;_ el motor</div><h1>Final Edge <span class="b">[ENGINE]</span></h1></div>
   <div class="labels" id="labels"></div>
-  <div class="hint" id="hint">pasa el mouse por cada fase o servicio</div>
+  <div class="bigtitle" id="bigtitle"></div>
+  <div class="phasemenu" id="phasemenu"></div>
+  <div class="back" id="back">&lt;_ volver</div>
+  <div class="hint" id="hint">pasa el mouse · haz click en una fase o servicio</div>
 </div>
 <script type="importmap">
 { "imports": { "three": "./vendor/three.module.min.js" } }
