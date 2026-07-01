@@ -1,78 +1,49 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Final Edge Engine — wheel</title>
 <link rel="stylesheet" href="css/fonts.css">
-<style>
-:root{--bg:#0E0E12;--accent:#1E80F0;--fg:#F4F4F2;--eval:#F4920C;--cap:#15D9D9;--exe:#E15CDB;--ease:cubic-bezier(.2,.8,.2,1)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 12px;min-height:100vh}
-.eyebrow{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:#7E7E88;margin:0}
-h1{font-size:clamp(28px,6vw,44px);font-weight:600;letter-spacing:-.04em;margin:2px 0 22px;text-align:center}
-h1 .b{color:var(--accent)}
-.scene{width:min(720px,92vw);aspect-ratio:1/1;position:relative}
-.stage{position:absolute;inset:0;width:720px;height:720px;transform-origin:top left}
-svg{position:absolute;inset:0;width:720px;height:720px;overflow:visible}
-.plabel{font-size:15px;font-weight:600;letter-spacing:.18em;font-family:"Geist Mono",monospace}
-/* edge lockup: [AI] left-aligned to the name's first letter */
-.lock{position:absolute;transform:translate(-50%,-50%);display:inline-grid;
- grid-template-columns:auto auto;column-gap:.32em;align-items:baseline;white-space:nowrap;line-height:1.12}
-.lock .pr{grid-column:1;grid-row:1;font-size:14px;font-weight:600}
-.lock .nm{grid-column:2;grid-row:1;font-size:16px;font-weight:600;color:var(--fg)}
-.lock .ai{grid-column:2;grid-row:2;justify-self:start;font-size:14px;font-weight:600;letter-spacing:.1em;margin-top:1px}
-/* hub: [ENGINE] left bracket aligned to the "f" of final */
-.hubwrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-grid;
- grid-template-columns:auto auto;column-gap:.26em;align-items:baseline}
-.hubwrap .pr{grid-column:1;grid-row:1;color:var(--accent);font-size:18px;font-weight:600}
-.hubwrap .fe{grid-column:2;grid-row:1;font-size:19px;font-weight:600;letter-spacing:-.02em}
-.hubwrap .eng{grid-column:2;grid-row:2;justify-self:start;font-size:15px;font-weight:600;color:var(--accent);letter-spacing:.02em;margin-top:3px}
-.ring{transform-origin:360px 360px;animation:ringspin 60s linear infinite}
-@keyframes ringspin{to{transform:rotate(360deg)}}
-.core{transform-box:fill-box;animation:corepulse 3.2s var(--ease) infinite}
-@keyframes corepulse{0%,100%{stroke-opacity:.15;r:84}50%{stroke-opacity:.6;r:92}}
-.sector,.band,.plabel,.lock{transition:opacity 600ms var(--ease)}
-.ph-eval,.ph-cap,.ph-exe{opacity:.32}
-@keyframes sw-eval{0%,27%{opacity:1}33%,100%{opacity:.32}}
-@keyframes sw-cap{33%,60%{opacity:1}0%,27%,66%,100%{opacity:.32}}
-@keyframes sw-exe{66%,93%{opacity:1}0%,60%,100%{opacity:.32}}
-.sector.ph-eval,.band.ph-eval,.plabel.ph-eval,.lock.l-eval{animation:sw-eval 8.1s var(--ease) infinite}
-.sector.ph-cap,.band.ph-cap,.plabel.ph-cap,.lock.l-cap{animation:sw-cap 8.1s var(--ease) infinite}
-.sector.ph-exe,.band.ph-exe,.plabel.ph-exe,.lock.l-exe{animation:sw-exe 8.1s var(--ease) infinite}
-@media(prefers-reduced-motion:reduce){*{animation:none!important}.ph-eval,.ph-cap,.ph-exe{opacity:1}}
-.cap{font-size:13px;color:#7E7E88;letter-spacing:.06em;margin-top:18px;text-align:center;max-width:60ch}
+<style>*{box-sizing:border-box;margin:0}body{background:#0E0E12;color:#F4F4F2;font-family:'Geist Mono',monospace;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:28px}
+.head{width:min(880px,100%);}
+.head .n{font-family:'Geist Mono',monospace;font-size:clamp(44px,7vw,104px);font-weight:600;letter-spacing:-.06em;color:#1E80F0;line-height:.9}
+.head .lbl{font-size:15px;letter-spacing:.22em;color:#C6C6CC;margin-top:8px}
+.card{border:1px solid #1A1A1E;background:#0A0A0C;padding:48px;display:flex;justify-content:center;overflow-x:auto;width:100%;max-width:980px}
+.stage{position:relative;width:880px;height:880px;flex:none}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 </style></head><body>
-<p class="eyebrow">&gt;_ el motor de final edge</p>
-<h1>Final Edge <span class="b">[ENGINE]</span>™</h1>
-<div class="scene"><div class="stage" id="stage">
+<div class="head"><div class="n">07</div><div class="lbl">&gt;_ EL FINAL EDGE ENGINE™</div></div>
+<div class="card"><div class="stage">
 <svg viewBox="0 0 720 720"><defs>
-<radialGradient id="g-eval" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#F4920C" stop-opacity="0.05"/><stop offset="70%" stop-color="#F4920C" stop-opacity="0.18"/><stop offset="100%" stop-color="#F4920C" stop-opacity="0.34"/></radialGradient>
-<radialGradient id="g-cap" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#15D9D9" stop-opacity="0.05"/><stop offset="70%" stop-color="#15D9D9" stop-opacity="0.18"/><stop offset="100%" stop-color="#15D9D9" stop-opacity="0.34"/></radialGradient>
-<radialGradient id="g-exe" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#E15CDB" stop-opacity="0.05"/><stop offset="70%" stop-color="#E15CDB" stop-opacity="0.18"/><stop offset="100%" stop-color="#E15CDB" stop-opacity="0.34"/></radialGradient>
+<radialGradient id="gAmber" gradientUnits="userSpaceOnUse" cx="360" cy="360" r="288"><stop offset="0.35" stop-color="#1C1407"></stop><stop offset="1" stop-color="#0A0805"></stop></radialGradient>
+<radialGradient id="gCyan" gradientUnits="userSpaceOnUse" cx="360" cy="360" r="288"><stop offset="0.35" stop-color="#08191A"></stop><stop offset="1" stop-color="#050B0B"></stop></radialGradient>
+<radialGradient id="gMag" gradientUnits="userSpaceOnUse" cx="360" cy="360" r="288"><stop offset="0.35" stop-color="#180819"></stop><stop offset="1" stop-color="#0A050B"></stop></radialGradient>
 </defs>
-<circle class="ring" cx="360.0" cy="360.0" r="312" fill="none" stroke="#1A1A1E" stroke-width="1.5" stroke-dasharray="2 10"/>
-<path class="sector ph-eval" d="M163.25 237.06 A232 232 0 0 1 351.90 128.14 L356.65 264.06 A96 96 0 0 0 278.59 309.13 Z" fill="url(#g-eval)" stroke="#F4920C" stroke-width="1.5" stroke-opacity="0.85"/>
-<path class="sector ph-eval" d="M368.10 128.14 A232 232 0 0 1 556.75 237.06 L441.41 309.13 A96 96 0 0 0 363.35 264.06 Z" fill="url(#g-eval)" stroke="#F4920C" stroke-width="1.5" stroke-opacity="0.85"/>
-<path class="sector ph-cap" d="M564.84 251.08 A232 232 0 0 1 564.84 468.92 L444.76 405.07 A96 96 0 0 0 444.76 314.93 Z" fill="url(#g-cap)" stroke="#15D9D9" stroke-width="1.5" stroke-opacity="0.85"/>
-<path class="sector ph-cap" d="M556.75 482.94 A232 232 0 0 1 368.10 591.86 L363.35 455.94 A96 96 0 0 0 441.41 410.87 Z" fill="url(#g-cap)" stroke="#15D9D9" stroke-width="1.5" stroke-opacity="0.85"/>
-<path class="sector ph-exe" d="M351.90 591.86 A232 232 0 0 1 163.25 482.94 L278.59 410.87 A96 96 0 0 0 356.65 455.94 Z" fill="url(#g-exe)" stroke="#E15CDB" stroke-width="1.5" stroke-opacity="0.85"/>
-<path class="sector ph-exe" d="M155.16 468.92 A232 232 0 0 1 155.16 251.08 L275.24 314.93 A96 96 0 0 0 275.24 405.07 Z" fill="url(#g-exe)" stroke="#E15CDB" stroke-width="1.5" stroke-opacity="0.85"/>
-<path class="band ph-eval" d="M125.54 210.63 A278 278 0 0 1 594.46 210.63 L569.16 226.75 A248 248 0 0 0 150.84 226.75 Z" fill="#F4920C" stroke="none"/>
-<path class="band ph-cap" d="M606.59 231.63 A278 278 0 0 1 372.13 637.74 L370.82 607.76 A248 248 0 0 0 579.98 245.49 Z" fill="#15D9D9" stroke="none"/>
-<path class="band ph-exe" d="M347.87 637.74 A278 278 0 0 1 113.41 231.63 L140.02 245.49 A248 248 0 0 0 349.18 607.76 Z" fill="#E15CDB" stroke="none"/>
-<text class="plabel ph-eval" x="360.0" y="70.0" fill="#F4920C" text-anchor="middle" dominant-baseline="middle">EVALUACIÓN</text>
-<text class="plabel ph-cap" x="661.4" y="534.0" fill="#15D9D9" text-anchor="middle" dominant-baseline="middle">CAPACIDADES</text>
-<text class="plabel ph-exe" x="67.3" y="529.0" fill="#E15CDB" text-anchor="middle" dominant-baseline="middle">EJECUCIÓN</text>
-<circle class="hub" cx="360.0" cy="360.0" r="84" fill="#0A0A0C" stroke="#1E80F0" stroke-width="1.5"/>
-<circle class="core" cx="360.0" cy="360.0" r="84" fill="none" stroke="#1E80F0" stroke-width="1.5" stroke-opacity="0.6"/></svg>
-<div class="lock l-eval" style="left:38.333%;top:29.793%"><span class="pr" style="color:#F4920C">&gt;_</span><span class="nm">strategy</span><span class="ai" style="color:#F4920C">[AI]</span></div>
-<div class="lock l-eval" style="left:61.667%;top:29.793%"><span class="pr" style="color:#F4920C">&gt;_</span><span class="nm">intelligence</span><span class="ai" style="color:#F4920C">[AI]</span></div>
-<div class="lock l-cap" style="left:73.333%;top:50.000%"><span class="pr" style="color:#15D9D9">&gt;_</span><span class="nm">readiness</span><span class="ai" style="color:#15D9D9">[AI]</span></div>
-<div class="lock l-cap" style="left:61.667%;top:70.207%"><span class="pr" style="color:#15D9D9">&gt;_</span><span class="nm">flow</span><span class="ai" style="color:#15D9D9">[AI]</span></div>
-<div class="lock l-exe" style="left:38.333%;top:70.207%"><span class="pr" style="color:#E15CDB">&gt;_</span><span class="nm">systems</span><span class="ai" style="color:#E15CDB">[AI]</span></div>
-<div class="lock l-exe" style="left:26.667%;top:50.000%"><span class="pr" style="color:#E15CDB">&gt;_</span><span class="nm">creative</span><span class="ai" style="color:#E15CDB">[AI]</span></div>
-<div class="hubwrap"><span class="pr">&gt;_</span><span class="fe">final edge</span><span class="eng">[ENGINE]</span></div>
+<path d="M132.28 200.55 A278 278 0 0 1 587.72 200.55 L563.15 217.75 A248 248 0 0 0 156.85 217.75 Z" fill="#F4920C" stroke="#F4920C" stroke-width="1" stroke-opacity="0.7"></path>
+<path d="M611.95 242.51 A278 278 0 0 1 384.23 636.94 L381.61 607.06 A248 248 0 0 0 584.76 255.19 Z" fill="#15D9D9" stroke="#15D9D9" stroke-width="1" stroke-opacity="0.7"></path>
+<path d="M335.77 636.94 A278 278 0 0 1 108.05 242.51 L135.24 255.19 A248 248 0 0 0 338.39 607.06 Z" fill="#E15CDB" stroke="#E15CDB" stroke-width="1" stroke-opacity="0.7"></path>
+<path d="M167.66 230.27 A232 232 0 0 1 343.82 128.57 L353.3 264.23 A96 96 0 0 0 280.41 306.32 Z" fill="url(#gAmber)" stroke="#F4920C" stroke-width="1.25" stroke-opacity="0.85"></path>
+<path d="M376.18 128.57 A232 232 0 0 1 552.34 230.27 L439.59 306.32 A96 96 0 0 0 366.7 264.23 Z" fill="url(#gAmber)" stroke="#F4920C" stroke-width="1.25" stroke-opacity="0.85"></path>
+<path d="M568.52 258.3 A232 232 0 0 1 568.52 461.7 L446.28 402.08 A96 96 0 0 0 446.28 317.92 Z" fill="url(#gCyan)" stroke="#15D9D9" stroke-width="1.25" stroke-opacity="0.85"></path>
+<path d="M552.34 489.73 A232 232 0 0 1 376.18 591.43 L366.7 455.77 A96 96 0 0 0 439.59 413.68 Z" fill="url(#gCyan)" stroke="#15D9D9" stroke-width="1.25" stroke-opacity="0.85"></path>
+<path d="M343.82 591.43 A232 232 0 0 1 167.66 489.73 L280.41 413.68 A96 96 0 0 0 353.3 455.77 Z" fill="url(#gMag)" stroke="#E15CDB" stroke-width="1.25" stroke-opacity="0.85"></path>
+<path d="M151.48 461.7 A232 232 0 0 1 151.48 258.3 L273.72 317.92 A96 96 0 0 0 273.72 402.08 Z" fill="url(#gMag)" stroke="#E15CDB" stroke-width="1.25" stroke-opacity="0.85"></path>
+<circle cx="360" cy="360" r="84" fill="#0E0E12" stroke="#1A2A40" stroke-width="1.25"></circle>
+<text x="360.0" y="70.0" fill="#F4920C" text-anchor="middle" dominant-baseline="central" font-family="'Geist Mono', monospace" font-size="16" letter-spacing="2.6" font-weight="600">EVALUACIÓN</text>
+<text x="661.38" y="534.0" fill="#15D9D9" text-anchor="middle" dominant-baseline="central" font-family="'Geist Mono', monospace" font-size="16" letter-spacing="2.6" font-weight="600">CAPACIDADES</text>
+<text x="67.28" y="529.0" fill="#E15CDB" text-anchor="middle" dominant-baseline="central" font-family="'Geist Mono', monospace" font-size="16" letter-spacing="2.6" font-weight="600">EJECUCIÓN</text></svg>
+<div style="position:absolute;left:38.333333333333336%;top:29.793055555555554%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none"><div style="display:flex;align-items:baseline;gap:6px;line-height:1;white-space:nowrap"><span style="font-family:'Geist Mono',monospace;font-weight:700;font-size:14px;color:#F4920C;line-height:1">&gt;_</span><div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px"><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:18px;letter-spacing:-.02em;color:#F4F4F2;line-height:1">strategy</span><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.07em;color:#F4920C;line-height:1">[AI]</span></div></div></div>
+<div style="position:absolute;left:61.66666666666667%;top:29.793055555555554%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none"><div style="display:flex;align-items:baseline;gap:6px;line-height:1;white-space:nowrap"><span style="font-family:'Geist Mono',monospace;font-weight:700;font-size:14px;color:#F4920C;line-height:1">&gt;_</span><div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px"><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:18px;letter-spacing:-.02em;color:#F4F4F2;line-height:1">intelligence</span><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.07em;color:#F4920C;line-height:1">[AI]</span></div></div></div>
+<div style="position:absolute;left:73.33333333333333%;top:50.0%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none"><div style="display:flex;align-items:baseline;gap:6px;line-height:1;white-space:nowrap"><span style="font-family:'Geist Mono',monospace;font-weight:700;font-size:14px;color:#15D9D9;line-height:1">&gt;_</span><div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px"><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:18px;letter-spacing:-.02em;color:#F4F4F2;line-height:1">readiness</span><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.07em;color:#15D9D9;line-height:1">[AI]</span></div></div></div>
+<div style="position:absolute;left:61.66666666666667%;top:70.20694444444445%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none"><div style="display:flex;align-items:baseline;gap:6px;line-height:1;white-space:nowrap"><span style="font-family:'Geist Mono',monospace;font-weight:700;font-size:14px;color:#15D9D9;line-height:1">&gt;_</span><div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px"><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:18px;letter-spacing:-.02em;color:#F4F4F2;line-height:1">flow</span><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.07em;color:#15D9D9;line-height:1">[AI]</span></div></div></div>
+<div style="position:absolute;left:38.333333333333336%;top:70.20694444444445%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none"><div style="display:flex;align-items:baseline;gap:6px;line-height:1;white-space:nowrap"><span style="font-family:'Geist Mono',monospace;font-weight:700;font-size:14px;color:#E15CDB;line-height:1">&gt;_</span><div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px"><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:18px;letter-spacing:-.02em;color:#F4F4F2;line-height:1">systems</span><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.07em;color:#E15CDB;line-height:1">[AI]</span></div></div></div>
+<div style="position:absolute;left:26.666666666666668%;top:50.0%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none"><div style="display:flex;align-items:baseline;gap:6px;line-height:1;white-space:nowrap"><span style="font-family:'Geist Mono',monospace;font-weight:700;font-size:14px;color:#E15CDB;line-height:1">&gt;_</span><div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px"><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:18px;letter-spacing:-.02em;color:#F4F4F2;line-height:1">creative</span><span style="font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.07em;color:#E15CDB;line-height:1">[AI]</span></div></div></div>
+<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none">
+ <div style="display:flex;align-items:baseline;gap:9px">
+  <span style="font-family:'Geist Mono',monospace;font-weight:700;color:#1E80F0;font-size:16px">&gt;_</span>
+  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:7px">
+   <span style="font-family:'Geist Mono',monospace;font-weight:600;color:#F4F4F2;font-size:23px;letter-spacing:-.02em;word-spacing:-.36ch;line-height:1">final edge</span>
+   <span style="font-family:'Geist Mono',monospace;font-weight:600;color:#1E80F0;font-size:14px;letter-spacing:.16em;line-height:1">[ENGINE]</span>
+  </div>
+ </div>
+</div>
 </div></div>
-<p class="cap">3 fases · 6 edges · 1 conversión. Evaluación (strategy · intelligence) · Capacidades (readiness · flow) · Ejecución (systems · creative).</p>
-<script>
-function fit(){var s=document.querySelector('.scene'),st=document.getElementById('stage');st.style.transform='scale('+(s.clientWidth/720)+')';}
-window.addEventListener('resize',fit);fit();
-</script>
 </body></html>
