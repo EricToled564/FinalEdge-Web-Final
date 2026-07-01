@@ -16,12 +16,24 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
 .load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--faint);letter-spacing:.1em;z-index:3}
 .load .cur{color:var(--accent);animation:bl 1.2s steps(1) infinite}
 @keyframes bl{0%,49%{opacity:1}50%,100%{opacity:0}}
+/* floating service labels (crisp UI layer over the 3D) */
+.labels .lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;display:flex;
+  align-items:baseline;gap:.4em;padding:6px 11px;background:rgba(8,8,11,.6);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);line-height:1;
+  border:1px solid rgba(255,255,255,.06);transition:opacity .3s,transform .3s,background .3s,box-shadow .3s;will-change:left,top}
+.labels .lbl .pr{font-size:15px;font-weight:700}
+.labels .lbl .col{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.labels .lbl .nm{font-size:18px;font-weight:600;color:#F5F5F3;text-shadow:0 2px 10px rgba(0,0,0,.95)}
+.labels .lbl .ai{font-size:14px;font-weight:600}
+.labels .lbl.on{transform:translate(-50%,-50%) scale(1.22);background:rgba(10,10,14,.9);box-shadow:0 0 26px var(--gl,rgba(30,128,240,.5))}
+.labels .lbl.off{opacity:.32}
 </style></head>
 <body>
 <canvas id="c"></canvas>
 <div class="load" id="load">&gt;_ construyendo el motor <span class="cur">█</span></div>
 <div class="ui">
   <div class="top"><div class="eye">&gt;_ el motor</div><h1>Final Edge <span class="b">[ENGINE]</span></h1></div>
+  <div class="labels" id="labels"></div>
   <div class="hint" id="hint">pasa el mouse por cada fase o servicio</div>
 </div>
 <script type="importmap">
@@ -43,9 +55,9 @@ const EDGES=[
 ];
 // band labels — exact brand-book radii/angles
 const BANDS=[
- {phase:'eval',hex:AMBER,c:0,name:'EVALUACIÓN',lr:338},
- {phase:'cap', hex:CYAN, c:120,name:'CAPACIDADES',lr:382},
- {phase:'exe', hex:MAG,  c:240,name:'EJECUCIÓN',lr:372},
+ {phase:'eval',hex:AMBER,c:0,name:'EVALUACIÓN',lr:300},
+ {phase:'cap', hex:CYAN, c:120,name:'CAPACIDADES',lr:352},
+ {phase:'exe', hex:MAG,  c:240,name:'EJECUCIÓN',lr:344},
 ];
 
 function P(r,deg){ const a=deg*Math.PI/180; return [r*Math.sin(a), r*Math.cos(a)]; }
@@ -107,7 +119,7 @@ function hubTexture(){
 function bandTexture(name,hex){
   const cw=1536,ch=384;
   return {tex:makeTex((x)=>{ x.clearRect(0,0,cw,ch); x.textAlign='center'; x.textBaseline='middle'; shadow(x);
-    x.font=`600 118px "Geist Mono",monospace`; x.letterSpacing='16px'; x.fillStyle=hx(hex); x.fillText(name,cw/2,ch/2);
+    x.font=`600 90px "Geist Mono",monospace`; x.letterSpacing='12px'; x.fillStyle=hx(hex); x.fillText(name,cw/2,ch/2);
   },cw,ch), aspect:cw/ch};
 }
 function plane(o,w,pos,blend){
@@ -123,7 +135,7 @@ await document.fonts.load('600 82px "Geist Mono"');
 await document.fonts.ready;
 
 const wheel=new THREE.Group(); scene.add(wheel);
-const hitList=[];
+const hitList=[]; const labelList=[]; const labelsEl=document.getElementById('labels');
 const DARK_BASE=new THREE.Color(0x101016), DARK_DIM=new THREE.Color(0x050507);
 
 BANDS.forEach(b=>{
@@ -133,7 +145,7 @@ BANDS.forEach(b=>{
   mesh.userData={kind:'band',phase:b.phase,hex:b.hex,baseCol:new THREE.Color(b.hex),tEmis:0.12,tLit:1};
   wheel.add(mesh); hitList.push(mesh);
   const lp=P(b.lr,b.c);
-  wheel.add(plane(bandTexture(b.name,b.hex),440,[lp[0],lp[1],D_SEC/2+BEV+2]));
+  wheel.add(plane(bandTexture(b.name,b.hex),220,[lp[0],lp[1],D_SEC/2+BEV+2]));
 });
 
 EDGES.forEach(e=>{
@@ -141,11 +153,13 @@ EDGES.forEach(e=>{
   const mat=new THREE.MeshPhysicalMaterial({color:DARK_BASE.clone(),metalness:0.4,roughness:0.44,clearcoat:0.5,clearcoatRoughness:0.3,emissive:new THREE.Color(e.hex),emissiveIntensity:0,envMapIntensity:0.8});
   const mesh=new THREE.Mesh(geo,mat);
   mesh.userData={kind:'sector',phase:e.phase,hex:e.hex,word:e.word,tEmis:0,tLit:1};
-  const lk=lockupTexture(e.word,e.hex); const dp=P(RL,e.c);
-  const dm=plane(lk,138,[dp[0],dp[1],D_SEC/2+BEV+2]);           // base label (fits without touching dividers)
-  const gl=plane(lk,138,[dp[0],dp[1],D_SEC/2+BEV+3],THREE.AdditiveBlending); // glow layer (lights on hover)
-  wheel.add(dm); wheel.add(gl);
-  mesh.userData.decal=dm; mesh.userData.glow=gl;
+  // crisp floating UI label (projected each frame) instead of an on-surface decal
+  const dp=P(RL,e.c);
+  const anchor=new THREE.Object3D(); anchor.position.set(dp[0],dp[1],D_SEC/2+BEV); wheel.add(anchor);
+  const div=document.createElement('div'); div.className='lbl'; div.style.setProperty('--gl',hx(e.hex)+'80');
+  div.innerHTML='<span class="pr" style="color:'+hx(e.hex)+'">&gt;_</span><span class="col"><span class="nm">'+e.word+'</span><span class="ai" style="color:'+hx(e.hex)+'">[AI]</span></span>';
+  labelsEl.appendChild(div);
+  labelList.push({anchor,div,phase:e.phase});
   wheel.add(mesh); hitList.push(mesh);
 });
 
@@ -159,13 +173,15 @@ spinRim.position.z=D_CORE/2; wheel.add(spinRim);
 
 wheel.scale.setScalar(S);
 wheel.updateMatrixWorld(true);
+// frame the whole wheel (incl. phase labels) with margin so nothing is cropped
 { const box=new THREE.Box3().setFromObject(wheel); const size=box.getSize(new THREE.Vector3());
-  const diag=size.length(); const dist=(diag*0.5)/Math.tan(THREE.MathUtils.degToRad(camera.fov)/2)*1.08;
+  const R=Math.max(size.x,size.y)*0.5;
+  const dist=R/Math.tan(THREE.MathUtils.degToRad(camera.fov)/2)*1.12;
   camera.position.set(0,0,dist); camera.lookAt(0,0,0); }
 
 document.getElementById('load').style.display='none'; window.__ready=true;
 
-const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2(-2,-2);
+const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2(-2,-2); const _v=new THREE.Vector3();
 let hoverPhase=null, mx=0,my=0,tmx=0,tmy=0;
 addEventListener('pointermove',e=>{
   mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
@@ -204,14 +220,18 @@ function loop(){
     const lit=m.userData.tLit;
     m.userData._lit = (m.userData._lit==null?1:m.userData._lit) + (lit-(m.userData._lit==null?1:m.userData._lit))*0.14;
     const L=m.userData._lit;
-    if(m.userData.kind==='sector'){
-      mat.color.copy(DARK_DIM).lerp(DARK_BASE, L);
-      const hoveredHere = hoverPhase && m.userData.phase===hoverPhase;
-      if(m.userData.decal){ m.userData.decal.material.opacity += (( !hoverPhase?0.92 : (hoveredHere?1:0.32) )-m.userData.decal.material.opacity)*0.14; }
-      if(m.userData.glow){ m.userData.glow.material.opacity += (( hoveredHere?0.85:0 )-m.userData.glow.material.opacity)*0.14; } // letters light up on hover
-    } else {
-      mat.color.copy(m.userData.baseCol).multiplyScalar(0.25+0.75*L);
-    }
+    if(m.userData.kind==='sector') mat.color.copy(DARK_DIM).lerp(DARK_BASE, L);
+    else mat.color.copy(m.userData.baseCol).multiplyScalar(0.25+0.75*L);
+  });
+  // project + state the floating service labels
+  labelList.forEach(L=>{
+    L.anchor.getWorldPosition(_v); _v.project(camera);
+    L.div.style.left=((_v.x*.5+.5)*innerWidth)+'px';
+    L.div.style.top=((-_v.y*.5+.5)*innerHeight)+'px';
+    const on = hoverPhase && L.phase===hoverPhase;
+    const off = hoverPhase && L.phase!==hoverPhase;
+    L.div.classList.toggle('on', !!on);
+    L.div.classList.toggle('off', !!off);
   });
   renderer.render(scene,camera);
 }
