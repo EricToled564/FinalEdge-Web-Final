@@ -31,7 +31,7 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
 import * as THREE from 'three';
 import { RoomEnvironment } from './vendor/environments/RoomEnvironment.js';
 
-const Ri=96, Ro=232, RL=168, gap=4, famRi=248, famRo=278, famGap=5;
+const Ri=96, Ro=232, RL=174, gap=4, famRi=248, famRo=278, famGap=5;
 const AMBER=0xF4920C, CYAN=0x15D9D9, MAG=0xE15CDB, BLUE=0x1E80F0;
 const S=0.011, D_SEC=42, D_BAND=30, D_CORE=54, BEV=5;
 const hx = n => '#'+n.toString(16).padStart(6,'0');
@@ -41,10 +41,11 @@ const EDGES=[
  {word:'readiness',hex:CYAN,phase:'cap',c:90},   {word:'flow',hex:CYAN,phase:'cap',c:150},
  {word:'systems',hex:MAG,phase:'exe',c:210},     {word:'creative',hex:MAG,phase:'exe',c:270},
 ];
+// band labels — exact brand-book radii/angles
 const BANDS=[
- {phase:'eval',hex:AMBER,c:0,name:'EVALUACIÓN',lr:300},
- {phase:'cap', hex:CYAN, c:120,name:'CAPACIDADES',lr:322},
- {phase:'exe', hex:MAG,  c:240,name:'EJECUCIÓN',lr:318},
+ {phase:'eval',hex:AMBER,c:0,name:'EVALUACIÓN',lr:290},
+ {phase:'cap', hex:CYAN, c:120,name:'CAPACIDADES',lr:348},
+ {phase:'exe', hex:MAG,  c:240,name:'EJECUCIÓN',lr:338},
 ];
 
 function P(r,deg){ const a=deg*Math.PI/180; return [r*Math.sin(a), r*Math.cos(a)]; }
@@ -75,46 +76,45 @@ scene.add(new THREE.AmbientLight(0x2a3550,0.55));
 const key=new THREE.DirectionalLight(0xffffff,1.7); key.position.set(4,6,6); scene.add(key);
 const fill=new THREE.PointLight(0x1E80F0,22,60); fill.position.set(-6,-3,5); scene.add(fill);
 
-// ---------- logo textures (legible: big + dark shadow) ----------
 function makeTex(draw,cw,ch){
   const cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
   const x=cv.getContext('2d'); draw(x,cw,ch);
   const t=new THREE.CanvasTexture(cv); t.anisotropy=16; t.colorSpace=THREE.SRGBColorSpace; t.needsUpdate=true; return t;
 }
-function shadow(x){ x.shadowColor='rgba(0,0,0,0.92)'; x.shadowBlur=18; x.shadowOffsetX=0; x.shadowOffsetY=4; }
+function shadow(x){ x.shadowColor='rgba(0,0,0,0.92)'; x.shadowBlur=20; x.shadowOffsetX=0; x.shadowOffsetY=4; }
 function lockupTexture(word,hex){
   const cw=1024,ch=512,col=hx(hex),white='#F5F5F3';
-  const tex=makeTex((x)=>{ x.clearRect(0,0,cw,ch); x.textBaseline='alphabetic';
-    const pS=80,wS=112,aS=74,x0=54,wordY=286; shadow(x);
+  return {tex:makeTex((x)=>{ x.clearRect(0,0,cw,ch); x.textBaseline='alphabetic';
+    const pS=78,wS=104,aS=70,x0=70,wordY=286; shadow(x);
     x.font=`700 ${pS}px "Geist Mono",monospace`; x.fillStyle=col; x.fillText('>_',x0,wordY);
     const pw=x.measureText('>_ ').width, wx=x0+pw;
     x.font=`600 ${wS}px "Geist Mono",monospace`; x.fillStyle=white; x.fillText(word,wx,wordY);
     x.font=`600 ${aS}px "Geist Mono",monospace`; x.fillStyle=col; x.fillText('[AI]',wx,wordY+aS+26);
-  },cw,ch);
-  return {tex,aspect:cw/ch};
+  },cw,ch), aspect:cw/ch};
 }
 function hubTexture(){
   const cw=1024,ch=512;
-  const tex=makeTex((x)=>{ x.clearRect(0,0,cw,ch); x.textBaseline='alphabetic'; shadow(x);
-    const pS=58,wS=82,eS=54,x0=70,wordY=250;
-    x.font=`700 ${pS}px "Geist Mono",monospace`; x.fillStyle='#1E80F0'; x.fillText('>_',x0,wordY);
-    const pw=x.measureText('>_ ').width, wx=x0+pw;
+  return {tex:makeTex((x)=>{ x.clearRect(0,0,cw,ch); x.textBaseline='alphabetic'; shadow(x);
+    const pS=70,wS=100,eS=64,wordY=252;
+    x.font=`700 ${pS}px "Geist Mono",monospace`; const pw=x.measureText('>_ ').width;
+    x.font=`600 ${wS}px "Geist Mono",monospace`; const ww=x.measureText('final edge').width;
+    const startX=(cw-(pw+ww))/2, wx=startX+pw;
+    x.font=`700 ${pS}px "Geist Mono",monospace`; x.fillStyle='#1E80F0'; x.fillText('>_',startX,wordY);
     x.font=`600 ${wS}px "Geist Mono",monospace`; x.fillStyle='#F5F5F3'; x.fillText('final edge',wx,wordY);
-    x.font=`600 ${eS}px "Geist Mono",monospace`; x.fillStyle='#1E80F0'; x.fillText('[ENGINE]',wx,wordY+eS+24);
-  },cw,ch);
-  return {tex,aspect:cw/ch};
+    x.font=`600 ${eS}px "Geist Mono",monospace`; x.fillStyle='#1E80F0'; x.fillText('[ENGINE]',wx,wordY+eS+22);
+  },cw,ch), aspect:cw/ch};
 }
 function bandTexture(name,hex){
   const cw=1024,ch=256;
-  const tex=makeTex((x)=>{ x.clearRect(0,0,cw,ch); x.textAlign='center'; x.textBaseline='middle'; shadow(x);
-    x.font=`600 76px "Geist Mono",monospace`; x.letterSpacing='10px'; x.fillStyle=hx(hex); x.fillText(name,cw/2,ch/2);
-  },cw,ch);
-  return {tex,aspect:cw/ch};
+  return {tex:makeTex((x)=>{ x.clearRect(0,0,cw,ch); x.textAlign='center'; x.textBaseline='middle'; shadow(x);
+    x.font=`600 74px "Geist Mono",monospace`; x.letterSpacing='10px'; x.fillStyle=hx(hex); x.fillText(name,cw/2,ch/2);
+  },cw,ch), aspect:cw/ch};
 }
-function decal(o,w,pos){
+function plane(o,w,pos,blend){
   const h=w/o.aspect;
   const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),
-    new THREE.MeshBasicMaterial({map:o.tex,transparent:true,depthWrite:false,depthTest:true,toneMapped:false}));
+    new THREE.MeshBasicMaterial({map:o.tex,transparent:true,depthWrite:false,depthTest:true,toneMapped:false,
+      blending: blend||THREE.NormalBlending, opacity: blend?0:1}));
   m.position.set(pos[0],pos[1],pos[2]); m.renderOrder=10; return m;
 }
 
@@ -122,7 +122,6 @@ await document.fonts.load('700 82px "Geist Mono"');
 await document.fonts.load('600 82px "Geist Mono"');
 await document.fonts.ready;
 
-// ---------- build ----------
 const wheel=new THREE.Group(); scene.add(wheel);
 const hitList=[];
 const DARK_BASE=new THREE.Color(0x101016), DARK_DIM=new THREE.Color(0x050507);
@@ -133,10 +132,8 @@ BANDS.forEach(b=>{
   const mesh=new THREE.Mesh(geo,mat);
   mesh.userData={kind:'band',phase:b.phase,hex:b.hex,baseCol:new THREE.Color(b.hex),tEmis:0.12,tLit:1};
   wheel.add(mesh); hitList.push(mesh);
-  // phase name label (outside the band)
   const lp=P(b.lr,b.c);
-  const lbl=decal(bandTexture(b.name,b.hex),150,[lp[0],lp[1],D_SEC/2+BEV+2]);
-  mesh.userData.label=lbl; wheel.add(lbl);
+  wheel.add(plane(bandTexture(b.name,b.hex),150,[lp[0],lp[1],D_SEC/2+BEV+2]));
 });
 
 EDGES.forEach(e=>{
@@ -145,14 +142,17 @@ EDGES.forEach(e=>{
   const mesh=new THREE.Mesh(geo,mat);
   mesh.userData={kind:'sector',phase:e.phase,hex:e.hex,word:e.word,tEmis:0,tLit:1};
   const lk=lockupTexture(e.word,e.hex); const dp=P(RL,e.c);
-  const dm=decal(lk,168,[dp[0],dp[1],D_SEC/2+BEV+2]); mesh.userData.decal=dm; wheel.add(dm);
+  const dm=plane(lk,138,[dp[0],dp[1],D_SEC/2+BEV+2]);           // base label (fits without touching dividers)
+  const gl=plane(lk,138,[dp[0],dp[1],D_SEC/2+BEV+3],THREE.AdditiveBlending); // glow layer (lights on hover)
+  wheel.add(dm); wheel.add(gl);
+  mesh.userData.decal=dm; mesh.userData.glow=gl;
   wheel.add(mesh); hitList.push(mesh);
 });
 
 const core=new THREE.Mesh(new THREE.CylinderGeometry(84,84,D_CORE,96,1),
   new THREE.MeshPhysicalMaterial({color:0x0a0a0d,metalness:0.55,roughness:0.25,clearcoat:0.6,clearcoatRoughness:0.2,envMapIntensity:0.9}));
 core.rotation.x=Math.PI/2; wheel.add(core);
-const hub=decal(hubTexture(),150,[0,0,D_CORE/2+2]); wheel.add(hub);
+const hub=plane(hubTexture(),150,[0,0,D_CORE/2+2]); wheel.add(hub);   // centered + large
 const spinRim=new THREE.Mesh(new THREE.TorusGeometry(93,3.4,16,120,Math.PI*1.7),
   new THREE.MeshStandardMaterial({color:0x1E80F0,emissive:0x1E80F0,emissiveIntensity:1.5,metalness:0.4,roughness:0.3,toneMapped:false}));
 spinRim.position.z=D_CORE/2; wheel.add(spinRim);
@@ -165,7 +165,6 @@ wheel.updateMatrixWorld(true);
 
 document.getElementById('load').style.display='none'; window.__ready=true;
 
-// ---------- interaction ----------
 const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2(-2,-2);
 let hoverPhase=null, mx=0,my=0,tmx=0,tmy=0;
 addEventListener('pointermove',e=>{
@@ -196,7 +195,7 @@ function loop(){
   updateHover();
   mx+=(tmx-mx)*0.06; my+=(tmy-my)*0.06;
   wheel.position.y=Math.sin(t*0.9)*0.05;
-  wheel.rotation.x=Math.sin(t*0.7)*0.05 + my*0.15;   // wobble follows mouse
+  wheel.rotation.x=Math.sin(t*0.7)*0.05 + my*0.15;
   wheel.rotation.y=Math.sin(t*0.5)*0.06 + mx*0.20;
   spinRim.rotation.z-=0.014;
   hitList.forEach(m=>{
@@ -205,10 +204,14 @@ function loop(){
     const lit=m.userData.tLit;
     m.userData._lit = (m.userData._lit==null?1:m.userData._lit) + (lit-(m.userData._lit==null?1:m.userData._lit))*0.14;
     const L=m.userData._lit;
-    if(m.userData.kind==='sector'){ mat.color.copy(DARK_DIM).lerp(DARK_BASE, L); }
-    else { mat.color.copy(m.userData.baseCol).multiplyScalar(0.25+0.75*L); }
-    if(m.userData.decal){ m.userData.decal.material.opacity += ((0.3+0.7*L)-m.userData.decal.material.opacity)*0.14; }
-    if(m.userData.label){ m.userData.label.material.opacity += ((0.3+0.7*L)-m.userData.label.material.opacity)*0.14; }
+    if(m.userData.kind==='sector'){
+      mat.color.copy(DARK_DIM).lerp(DARK_BASE, L);
+      const hoveredHere = hoverPhase && m.userData.phase===hoverPhase;
+      if(m.userData.decal){ m.userData.decal.material.opacity += (( !hoverPhase?0.92 : (hoveredHere?1:0.32) )-m.userData.decal.material.opacity)*0.14; }
+      if(m.userData.glow){ m.userData.glow.material.opacity += (( hoveredHere?0.85:0 )-m.userData.glow.material.opacity)*0.14; } // letters light up on hover
+    } else {
+      mat.color.copy(m.userData.baseCol).multiplyScalar(0.25+0.75*L);
+    }
   });
   renderer.render(scene,camera);
 }
