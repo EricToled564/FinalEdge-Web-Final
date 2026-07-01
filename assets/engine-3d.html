@@ -20,7 +20,7 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
    matching the brand-book ratios exactly, with the hard 14px floor. */
 /* service lockup — brand book: prompt 14 · word 18 · [AI] 14 */
 .labels .lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;display:flex;
-  align-items:baseline;gap:.4em;line-height:1;will-change:left,top;
+  align-items:baseline;gap:.4em;line-height:1;will-change:left,top;pointer-events:auto;cursor:pointer;
   transition:opacity .3s,transform .28s cubic-bezier(.2,.8,.2,1),filter .28s}
 .labels .lbl .pr{font-size:max(14px,calc(14px*var(--ws,1)));font-weight:700;text-shadow:0 0 5px #000,0 1px 3px #000}
 .labels .lbl .col{display:flex;flex-direction:column;align-items:flex-start;gap:.22em}
@@ -29,8 +29,11 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
 .labels .lbl.on{transform:translate(-50%,-50%) scale(1.32);filter:drop-shadow(0 0 16px var(--gl,rgba(30,128,240,.85)))}
 .labels .lbl.off{opacity:.3}
 /* phase names — brand book SVG text 16 */
-.labels .plbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-weight:600;
-  font-size:max(14px,calc(16px*var(--ws,1)));letter-spacing:.18em;text-shadow:0 0 6px #000,0 1px 5px #000;line-height:1}
+.labels .plbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-weight:600;pointer-events:auto;cursor:pointer;
+  font-size:max(14px,calc(16px*var(--ws,1)));letter-spacing:.18em;text-shadow:0 0 6px #000,0 1px 5px #000;line-height:1;
+  transition:opacity .3s,transform .28s cubic-bezier(.2,.8,.2,1),filter .28s}
+.labels .plbl.on{transform:translate(-50%,-50%) scale(1.14);filter:drop-shadow(0 0 12px currentColor)}
+.labels .plbl.off{opacity:.4}
 /* hub logo — brand book: prompt 16 · final edge 23 · [ENGINE] 14 */
 .labels .hublbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;display:flex;
   align-items:baseline;gap:.36em;line-height:1;filter:drop-shadow(0 2px 9px rgba(0,0,0,.92))}
@@ -147,6 +150,7 @@ await document.fonts.ready;
 
 const wheel=new THREE.Group(); scene.add(wheel);
 const hitList=[]; const labelList=[]; const staticLabels=[]; const labelsEl=document.getElementById('labels');
+let domHover=null;   // set by hovering the HTML labels (takes priority over the raycast)
 const DARK_BASE=new THREE.Color(0x101016), DARK_DIM=new THREE.Color(0x050507);
 
 BANDS.forEach(b=>{
@@ -158,7 +162,10 @@ BANDS.forEach(b=>{
   const lp=P(b.lr,b.c);
   const pa=new THREE.Object3D(); pa.position.set(lp[0],lp[1],D_SEC/2+BEV); wheel.add(pa);
   const pd=document.createElement('div'); pd.className='plbl'; pd.style.color=hx(b.hex); pd.textContent=b.name;
-  labelsEl.appendChild(pd); staticLabels.push({anchor:pa,div:pd});
+  labelsEl.appendChild(pd);
+  pd.addEventListener('pointerenter',()=>domHover={mode:'phase',phase:b.phase});
+  pd.addEventListener('pointerleave',()=>domHover=null);
+  staticLabels.push({anchor:pa,div:pd,kind:'phase',phase:b.phase});
 });
 
 EDGES.forEach(e=>{
@@ -172,7 +179,9 @@ EDGES.forEach(e=>{
   const div=document.createElement('div'); div.className='lbl'; div.style.setProperty('--gl',hx(e.hex)+'80');
   div.innerHTML='<span class="pr" style="color:'+hx(e.hex)+'">&gt;_</span><span class="col"><span class="nm">'+e.word+'</span><span class="ai" style="color:'+hx(e.hex)+'">[AI]</span></span>';
   labelsEl.appendChild(div);
-  labelList.push({anchor,div,phase:e.phase});
+  div.addEventListener('pointerenter',()=>domHover={mode:'service',phase:e.phase,word:e.word});
+  div.addEventListener('pointerleave',()=>domHover=null);
+  labelList.push({anchor,div,phase:e.phase,word:e.word});
   wheel.add(mesh); hitList.push(mesh);
 });
 
@@ -182,7 +191,7 @@ core.rotation.x=Math.PI/2; wheel.add(core);
 const hubAnchor=new THREE.Object3D(); hubAnchor.position.set(0,0,D_CORE/2+2); wheel.add(hubAnchor);
 const hubDiv=document.createElement('div'); hubDiv.className='hublbl';
 hubDiv.innerHTML='<span class="pr">&gt;_</span><span class="col"><span class="nm">final edge</span><span class="eng">[ENGINE]</span></span>';
-labelsEl.appendChild(hubDiv); staticLabels.push({anchor:hubAnchor,div:hubDiv});
+labelsEl.appendChild(hubDiv); staticLabels.push({anchor:hubAnchor,div:hubDiv,kind:'hub'});
 const spinRim=new THREE.Mesh(new THREE.TorusGeometry(93,3.4,20,180),   // full ring (entero)
   new THREE.MeshStandardMaterial({color:0x1E80F0,emissive:0x1E80F0,emissiveIntensity:1.4,metalness:0.4,roughness:0.3,toneMapped:false}));
 spinRim.position.z=D_CORE/2; wheel.add(spinRim);
@@ -218,14 +227,34 @@ const hint=document.getElementById('hint');
 function updateHover(){
   ray.setFromCamera(mouse,camera);
   const hits=ray.intersectObjects(hitList,false);
-  hoverPhase = hits.length ? hits[0].object.userData.phase : null;
-  if(hoverPhase){ const b=BANDS.find(x=>x.phase===hoverPhase); hint.textContent='fase · '+b.name.toLowerCase(); hint.style.color=hx(b.hex); }
+  let rayHover=null;
+  if(hits.length){ const u=hits[0].object.userData;
+    rayHover = (u.kind==='band') ? {mode:'phase',phase:u.phase} : {mode:'service',phase:u.phase,word:u.word}; }
+  const H = domHover || rayHover;   // hovering an HTML label wins over the raycast
+  hoverPhase = H ? H.phase : null;
+  // hint
+  if(H && H.mode==='phase'){ const b=BANDS.find(x=>x.phase===H.phase); hint.textContent='fase · '+b.name.toLowerCase(); hint.style.color=hx(b.hex); }
+  else if(H){ const e=EDGES.find(x=>x.word===H.word); hint.textContent='servicio · '+H.word; hint.style.color=e?hx(e.hex):''; }
   else { hint.textContent='pasa el mouse por cada fase o servicio'; hint.style.color=''; }
+  // meshes: phase mode lights the whole phase (both sectors + band); service mode lights ONLY that sector
   hitList.forEach(m=>{
-    const on = !hoverPhase || m.userData.phase===hoverPhase;
-    m.userData.tLit = on ? 1 : 0.18;
-    if(m.userData.kind==='sector') m.userData.tEmis = (hoverPhase && m.userData.phase===hoverPhase) ? 1.5 : 0;
-    else m.userData.tEmis = (hoverPhase && m.userData.phase===hoverPhase) ? 1.0 : (hoverPhase?0.25:0.55);
+    let lit;
+    if(!H) lit=true;
+    else if(H.mode==='phase') lit = (m.userData.phase===H.phase);
+    else lit = (m.userData.kind==='sector' && m.userData.word===H.word);
+    m.userData.tLit = (!H||lit)?1:0.18;
+    if(m.userData.kind==='sector') m.userData.tEmis = (H&&lit)?1.5:0;
+    else m.userData.tEmis = (!H) ? 0.55 : ((H.mode==='phase'&&m.userData.phase===H.phase)?1.0:0.22);
+  });
+  // service labels: on if part of the lit set
+  labelList.forEach(L=>{
+    const on = H && (H.mode==='phase' ? L.phase===H.phase : L.word===H.word);
+    L.div.classList.toggle('on', !!on); L.div.classList.toggle('off', !!(H&&!on));
+  });
+  // phase-name labels: on only when its own phase is hovered (phase mode)
+  staticLabels.forEach(L=>{ if(L.kind!=='phase') return;
+    const on = H && H.mode==='phase' && L.phase===H.phase;
+    L.div.classList.toggle('on', !!on); L.div.classList.toggle('off', !!(H&&!on));
   });
 }
 
@@ -252,10 +281,6 @@ function loop(){
     L.anchor.getWorldPosition(_v); _v.project(camera);
     L.div.style.left=((_v.x*.5+.5)*innerWidth)+'px';
     L.div.style.top=((-_v.y*.5+.5)*innerHeight)+'px';
-    const on = hoverPhase && L.phase===hoverPhase;
-    const off = hoverPhase && L.phase!==hoverPhase;
-    L.div.classList.toggle('on', !!on);
-    L.div.classList.toggle('off', !!off);
   });
   staticLabels.forEach(L=>{                 // phase names + hub logo
     L.anchor.getWorldPosition(_v); _v.project(camera);
