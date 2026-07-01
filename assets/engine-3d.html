@@ -16,16 +16,28 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
 .load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--faint);letter-spacing:.1em;z-index:3}
 .load .cur{color:var(--accent);animation:bl 1.2s steps(1) infinite}
 @keyframes bl{0%,49%{opacity:1}50%,100%{opacity:0}}
-/* floating service labels — clean text (no boxes), pop on hover */
+/* all label text scales in proportion to the wheel (var --ws = wheelPx/880),
+   matching the brand-book ratios exactly, with the hard 14px floor. */
+/* service lockup — brand book: prompt 14 · word 18 · [AI] 14 */
 .labels .lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;display:flex;
   align-items:baseline;gap:.4em;line-height:1;will-change:left,top;
-  transition:opacity .3s var(--ease,ease),transform .28s cubic-bezier(.2,.8,.2,1),filter .28s}
-.labels .lbl .pr{font-size:15px;font-weight:700;text-shadow:0 0 5px #000,0 1px 3px #000}
-.labels .lbl .col{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
-.labels .lbl .nm{font-size:17px;font-weight:600;color:#F5F5F3;text-shadow:0 0 5px #000,0 1px 4px #000,0 2px 8px rgba(0,0,0,.9)}
-.labels .lbl .ai{font-size:13px;font-weight:600;text-shadow:0 0 5px #000,0 1px 3px #000}
+  transition:opacity .3s,transform .28s cubic-bezier(.2,.8,.2,1),filter .28s}
+.labels .lbl .pr{font-size:max(14px,calc(14px*var(--ws,1)));font-weight:700;text-shadow:0 0 5px #000,0 1px 3px #000}
+.labels .lbl .col{display:flex;flex-direction:column;align-items:flex-start;gap:.22em}
+.labels .lbl .nm{font-size:max(14px,calc(18px*var(--ws,1)));font-weight:600;color:#F5F5F3;text-shadow:0 0 5px #000,0 1px 4px #000,0 2px 8px rgba(0,0,0,.9)}
+.labels .lbl .ai{font-size:max(14px,calc(14px*var(--ws,1)));font-weight:600;text-shadow:0 0 5px #000,0 1px 3px #000}
 .labels .lbl.on{transform:translate(-50%,-50%) scale(1.32);filter:drop-shadow(0 0 16px var(--gl,rgba(30,128,240,.85)))}
 .labels .lbl.off{opacity:.3}
+/* phase names — brand book SVG text 16 */
+.labels .plbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-weight:600;
+  font-size:max(14px,calc(16px*var(--ws,1)));letter-spacing:.18em;text-shadow:0 0 6px #000,0 1px 5px #000;line-height:1}
+/* hub logo — brand book: prompt 16 · final edge 23 · [ENGINE] 14 */
+.labels .hublbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;display:flex;
+  align-items:baseline;gap:.36em;line-height:1;filter:drop-shadow(0 2px 9px rgba(0,0,0,.92))}
+.labels .hublbl .pr{font-size:max(14px,calc(16px*var(--ws,1)));font-weight:700;color:#1E80F0}
+.labels .hublbl .col{display:flex;flex-direction:column;align-items:flex-start;gap:.28em}
+.labels .hublbl .nm{font-size:max(14px,calc(23px*var(--ws,1)));font-weight:600;color:#F5F5F3;letter-spacing:-.02em}
+.labels .hublbl .eng{font-size:max(14px,calc(14px*var(--ws,1)));font-weight:600;color:#1E80F0;letter-spacing:.16em}
 </style></head>
 <body>
 <canvas id="c"></canvas>
@@ -42,7 +54,7 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
 import * as THREE from 'three';
 import { RoomEnvironment } from './vendor/environments/RoomEnvironment.js';
 
-const Ri=96, Ro=232, RL=174, gap=4, famRi=248, famRo=278, famGap=5;
+const Ri=96, Ro=232, RL=168, gap=4, famRi=248, famRo=278, famGap=5;
 const AMBER=0xF4920C, CYAN=0x15D9D9, MAG=0xE15CDB, BLUE=0x1E80F0;
 const S=0.011, D_SEC=42, D_BAND=30, D_CORE=54, BEV=5;
 const hx = n => '#'+n.toString(16).padStart(6,'0');
@@ -54,9 +66,9 @@ const EDGES=[
 ];
 // band labels — exact brand-book radii/angles
 const BANDS=[
- {phase:'eval',hex:AMBER,c:0,name:'EVALUACIÓN',lr:300},
- {phase:'cap', hex:CYAN, c:120,name:'CAPACIDADES',lr:352},
- {phase:'exe', hex:MAG,  c:240,name:'EJECUCIÓN',lr:344},
+ {phase:'eval',hex:AMBER,c:0,name:'EVALUACIÓN',lr:290},
+ {phase:'cap', hex:CYAN, c:120,name:'CAPACIDADES',lr:348},
+ {phase:'exe', hex:MAG,  c:240,name:'EJECUCIÓN',lr:338},
 ];
 
 function P(r,deg){ const a=deg*Math.PI/180; return [r*Math.sin(a), r*Math.cos(a)]; }
@@ -134,17 +146,19 @@ await document.fonts.load('600 82px "Geist Mono"');
 await document.fonts.ready;
 
 const wheel=new THREE.Group(); scene.add(wheel);
-const hitList=[]; const labelList=[]; const labelsEl=document.getElementById('labels');
+const hitList=[]; const labelList=[]; const staticLabels=[]; const labelsEl=document.getElementById('labels');
 const DARK_BASE=new THREE.Color(0x101016), DARK_DIM=new THREE.Color(0x050507);
 
 BANDS.forEach(b=>{
   const geo=extrude(sectorShape(b.c-60+famGap,b.c+60-famGap,famRi,famRo),D_BAND);
-  const mat=new THREE.MeshPhysicalMaterial({color:b.hex,metalness:0.35,roughness:0.17,clearcoat:1,clearcoatRoughness:0.08,emissive:b.hex,emissiveIntensity:0.12,envMapIntensity:1.25});
+  const mat=new THREE.MeshPhysicalMaterial({color:b.hex,metalness:0.15,roughness:0.32,clearcoat:0.5,clearcoatRoughness:0.2,emissive:b.hex,emissiveIntensity:0.55,envMapIntensity:0.5});
   const mesh=new THREE.Mesh(geo,mat);
-  mesh.userData={kind:'band',phase:b.phase,hex:b.hex,baseCol:new THREE.Color(b.hex),tEmis:0.12,tLit:1};
+  mesh.userData={kind:'band',phase:b.phase,hex:b.hex,baseCol:new THREE.Color(b.hex),tEmis:0.55,tLit:1};
   wheel.add(mesh); hitList.push(mesh);
   const lp=P(b.lr,b.c);
-  wheel.add(plane(bandTexture(b.name,b.hex),220,[lp[0],lp[1],D_SEC/2+BEV+2]));
+  const pa=new THREE.Object3D(); pa.position.set(lp[0],lp[1],D_SEC/2+BEV); wheel.add(pa);
+  const pd=document.createElement('div'); pd.className='plbl'; pd.style.color=hx(b.hex); pd.textContent=b.name;
+  labelsEl.appendChild(pd); staticLabels.push({anchor:pa,div:pd});
 });
 
 EDGES.forEach(e=>{
@@ -165,7 +179,10 @@ EDGES.forEach(e=>{
 const core=new THREE.Mesh(new THREE.CylinderGeometry(84,84,D_CORE,96,1),
   new THREE.MeshPhysicalMaterial({color:0x0a0a0d,metalness:0.55,roughness:0.25,clearcoat:0.6,clearcoatRoughness:0.2,envMapIntensity:0.9}));
 core.rotation.x=Math.PI/2; wheel.add(core);
-const hub=plane(hubTexture(),150,[0,0,D_CORE/2+2]); wheel.add(hub);   // centered + large
+const hubAnchor=new THREE.Object3D(); hubAnchor.position.set(0,0,D_CORE/2+2); wheel.add(hubAnchor);
+const hubDiv=document.createElement('div'); hubDiv.className='hublbl';
+hubDiv.innerHTML='<span class="pr">&gt;_</span><span class="col"><span class="nm">final edge</span><span class="eng">[ENGINE]</span></span>';
+labelsEl.appendChild(hubDiv); staticLabels.push({anchor:hubAnchor,div:hubDiv});
 const spinRim=new THREE.Mesh(new THREE.TorusGeometry(93,3.4,20,180),   // full ring (entero)
   new THREE.MeshStandardMaterial({color:0x1E80F0,emissive:0x1E80F0,emissiveIntensity:1.4,metalness:0.4,roughness:0.3,toneMapped:false}));
 spinRim.position.z=D_CORE/2; wheel.add(spinRim);
@@ -175,7 +192,7 @@ wheel.updateMatrixWorld(true);
 // frame the whole wheel (incl. phase labels) with margin so nothing is cropped
 { const box=new THREE.Box3().setFromObject(wheel); const size=box.getSize(new THREE.Vector3());
   const R=Math.max(size.x,size.y)*0.5;
-  const dist=R/Math.tan(THREE.MathUtils.degToRad(camera.fov)/2)*1.12;
+  const dist=R/Math.tan(THREE.MathUtils.degToRad(camera.fov)/2)*1.42;   // margin for phase labels
   camera.position.set(0,0,dist); camera.lookAt(0,0,0); }
 
 document.getElementById('load').style.display='none'; window.__ready=true;
@@ -186,7 +203,15 @@ addEventListener('pointermove',e=>{
   mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
   tmx=(e.clientX/innerWidth)*2-1; tmy=(e.clientY/innerHeight)*2-1;
 });
-function resize(){ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); }
+function updWS(){
+  // wheel on-screen diameter vs the brand book's 880px wheel → proportional label sizing
+  const c=new THREE.Vector3(0,0,0).project(camera);
+  const e=new THREE.Vector3(famRo*S,0,0).project(camera);
+  const dx=(e.x-c.x)*0.5*innerWidth, dy=(e.y-c.y)*0.5*innerHeight;
+  const ws=(2*Math.hypot(dx,dy))/880;
+  labelsEl.style.setProperty('--ws', ws.toFixed(4));
+}
+function resize(){ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); updWS(); }
 addEventListener('resize',resize); resize();
 
 const hint=document.getElementById('hint');
@@ -200,7 +225,7 @@ function updateHover(){
     const on = !hoverPhase || m.userData.phase===hoverPhase;
     m.userData.tLit = on ? 1 : 0.18;
     if(m.userData.kind==='sector') m.userData.tEmis = (hoverPhase && m.userData.phase===hoverPhase) ? 1.5 : 0;
-    else m.userData.tEmis = (hoverPhase && m.userData.phase===hoverPhase) ? 0.75 : (hoverPhase?0.03:0.12);
+    else m.userData.tEmis = (hoverPhase && m.userData.phase===hoverPhase) ? 1.0 : (hoverPhase?0.25:0.55);
   });
 }
 
@@ -231,6 +256,11 @@ function loop(){
     const off = hoverPhase && L.phase!==hoverPhase;
     L.div.classList.toggle('on', !!on);
     L.div.classList.toggle('off', !!off);
+  });
+  staticLabels.forEach(L=>{                 // phase names + hub logo
+    L.anchor.getWorldPosition(_v); _v.project(camera);
+    L.div.style.left=((_v.x*.5+.5)*innerWidth)+'px';
+    L.div.style.top=((-_v.y*.5+.5)*innerHeight)+'px';
   });
   renderer.render(scene,camera);
 }
