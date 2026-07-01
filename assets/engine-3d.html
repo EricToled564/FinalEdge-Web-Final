@@ -19,91 +19,223 @@ body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;ove
 </style></head>
 <body>
 <canvas id="c"></canvas>
-<div class="load" id="load">&gt;_ cargando el motor <span class="cur">█</span></div>
+<div class="load" id="load">&gt;_ construyendo el motor <span class="cur">█</span></div>
 <div class="ui">
   <div class="top"><div class="eye">&gt;_ el motor</div><h1>Final Edge <span class="b">[ENGINE]</span></h1></div>
-  <div class="hint">arrastra para rotar · scroll para acercar</div>
+  <div class="hint" id="hint">pasa el mouse por cada fase o servicio</div>
 </div>
 <script type="importmap">
 { "imports": { "three": "./vendor/three.module.min.js" } }
 </script>
 <script type="module">
 import * as THREE from 'three';
-import { GLTFLoader } from './vendor/loaders/GLTFLoader.js';
-import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/environments/RoomEnvironment.js';
 
-const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+// ---------- brand-book constants (exact) ----------
+const Ri=96, Ro=232, RL=168, gap=4, famRi=248, famRo=278, famGap=5;
+const AMBER=0xF4920C, CYAN=0x15D9D9, MAG=0xE15CDB, BLUE=0x1E80F0;
+const S = 0.011; // world scale for the 720-space geometry
+const D_SEC=42, D_BAND=30, D_CORE=54, BEV=5; // extrude depths (720-space)
+
+const EDGES=[
+ {word:'strategy',     hex:AMBER, phase:'eval', c:330, lab:'Estrategia'},
+ {word:'intelligence', hex:AMBER, phase:'eval', c:30,  lab:'Business Intelligence'},
+ {word:'readiness',    hex:CYAN,  phase:'cap',  c:90,  lab:'Team Readiness'},
+ {word:'flow',         hex:CYAN,  phase:'cap',  c:150, lab:'Optimización de Procesos'},
+ {word:'systems',      hex:MAG,   phase:'exe',  c:210, lab:'Sistemas'},
+ {word:'creative',     hex:MAG,   phase:'exe',  c:270, lab:'Producción Creativa'},
+];
+const BANDS=[
+ {phase:'eval', hex:AMBER, c:0,   name:'EVALUACIÓN'},
+ {phase:'cap',  hex:CYAN,  c:120, name:'CAPACIDADES'},
+ {phase:'exe',  hex:MAG,   c:240, name:'EJECUCIÓN'},
+];
+const hx = n => '#'+n.toString(16).padStart(6,'0');
+
+// P: 0deg = top, clockwise (viewed from +Z), centered at origin
+function P(r,deg){ const a=deg*Math.PI/180; return [r*Math.sin(a), r*Math.cos(a)]; }
+
+// annular-sector Shape sampled finely (a0..a1 deg, ri, ro)
+function sectorShape(a0,a1,ri,ro){
+  const s=new THREE.Shape(); const step=1;
+  let p=P(ro,a0); s.moveTo(p[0],p[1]);
+  for(let d=a0; d<=a1; d+=step){ p=P(ro,d); s.lineTo(p[0],p[1]); }
+  p=P(ro,a1); s.lineTo(p[0],p[1]);
+  for(let d=a1; d>=a0; d-=step){ p=P(ri,d); s.lineTo(p[0],p[1]); }
+  p=P(ri,a0); s.lineTo(p[0],p[1]);
+  s.closePath(); return s;
+}
+function extrude(shape,depth){
+  const g=new THREE.ExtrudeGeometry(shape,{depth,bevelEnabled:true,bevelThickness:BEV,bevelSize:BEV,bevelSegments:3,curveSegments:64});
+  g.translate(0,0,-depth/2); return g;
+}
+
+// ---------- renderer / scene ----------
+const canvas=document.getElementById('c');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x0E0E12);
+scene.fog=new THREE.FogExp2(0x0E0E12,0.028);
+const camera=new THREE.PerspectiveCamera(36,1,0.01,100);
+camera.position.set(0,0,7.4);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0E0E12);
+const pmrem=new THREE.PMREMGenerator(renderer);
+scene.environment=pmrem.fromScene(new RoomEnvironment(),0.03).texture;
+scene.add(new THREE.AmbientLight(0x2a3550,0.5));
+const key=new THREE.DirectionalLight(0xffffff,2.0); key.position.set(4,6,6); scene.add(key);
+const fill=new THREE.PointLight(0x1E80F0,26,60); fill.position.set(-6,-3,4); scene.add(fill);
+const rim=new THREE.PointLight(0xffffff,10,60); rim.position.set(0,4,-6); scene.add(rim);
 
-const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 1000);
+// ---------- materials ----------
+function darkMat(){ return new THREE.MeshPhysicalMaterial({color:0x0b0b10,metalness:0.55,roughness:0.22,clearcoat:1,clearcoatRoughness:0.12,envMapIntensity:1.15}); }
+function phaseMat(hex){ return new THREE.MeshPhysicalMaterial({color:hex,metalness:0.35,roughness:0.16,clearcoat:1,clearcoatRoughness:0.08,emissive:hex,emissiveIntensity:0.14,envMapIntensity:1.3}); }
 
-const pmrem = new THREE.PMREMGenerator(renderer);
-scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+// ---------- logo canvas → texture ----------
+function lockupTexture(word, hex, promptOnly){
+  const cw=768, ch=384, cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+  const x=cv.getContext('2d'); x.clearRect(0,0,cw,ch);
+  const col=hx(hex); const white='#F4F4F2';
+  x.textBaseline='alphabetic';
+  const pS=58, wS=82, aS=54, gapPx=16, x0=40, wordY=210;
+  // prompt >_
+  x.font=`700 ${pS}px "Geist Mono", monospace`; x.fillStyle=col;
+  x.fillText('>_', x0, wordY);
+  const pw=x.measureText('>_ ').width;
+  const wx=x0+pw;
+  // word
+  x.font=`600 ${wS}px "Geist Mono", monospace`; x.fillStyle=white;
+  x.fillText(word, wx, wordY);
+  // [AI] under word, left-aligned to word start
+  x.font=`600 ${aS}px "Geist Mono", monospace`; x.fillStyle=col;
+  x.fillText('[AI]', wx, wordY+aS+18);
+  const t=new THREE.CanvasTexture(cv); t.anisotropy=8; t.colorSpace=THREE.SRGBColorSpace; t.needsUpdate=true;
+  return {tex:t, aspect:cw/ch};
+}
+function hubTexture(){
+  const cw=768, ch=384, cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+  const x=cv.getContext('2d'); x.textBaseline='alphabetic';
+  const pS=42, wS=60, eS=40, x0=70, wordY=190;
+  x.font=`700 ${pS}px "Geist Mono", monospace`; x.fillStyle='#1E80F0'; x.fillText('>_', x0, wordY);
+  const pw=x.measureText('>_ ').width; const wx=x0+pw;
+  x.font=`600 ${wS}px "Geist Mono", monospace`; x.fillStyle='#F4F4F2'; x.fillText('final edge', wx, wordY);
+  x.font=`600 ${eS}px "Geist Mono", monospace`; x.fillStyle='#1E80F0';
+  x.save(); x.textBaseline='alphabetic'; x.fillText('[ENGINE]', wx, wordY+eS+20); x.restore();
+  const t=new THREE.CanvasTexture(cv); t.anisotropy=8; t.colorSpace=THREE.SRGBColorSpace; t.needsUpdate=true;
+  return t;
+}
+function decal(tex, aspect, w, pos){
+  const h=w/aspect;
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),
+    new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,toneMapped:false}));
+  m.position.set(pos[0],pos[1],pos[2]); m.renderOrder=5; return m;
+}
 
-scene.add(new THREE.AmbientLight(0x1a2740, 0.5));
-const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(4,6,5); scene.add(key);
-const blue = new THREE.PointLight(0x1E80F0, 30, 60); blue.position.set(-5,-2,4); scene.add(blue);
+// guarantee Geist Mono is ready before drawing logo textures
+await document.fonts.load('700 82px "Geist Mono"');
+await document.fonts.load('600 82px "Geist Mono"');
+await document.fonts.ready;
 
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true; controls.dampingFactor = 0.08;
-controls.autoRotate = true; controls.autoRotateSpeed = 0.9;
-controls.enablePan = false;
+// ---------- build the wheel ----------
+const wheel=new THREE.Group(); scene.add(wheel);
+const phaseGroups={eval:new THREE.Group(),cap:new THREE.Group(),exe:new THREE.Group()};
+Object.values(phaseGroups).forEach(g=>wheel.add(g));
+const hitList=[]; // meshes for raycasting
 
-function resize(){ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); }
-addEventListener('resize', resize); resize();
-
-const loader = new GLTFLoader();
-loader.load('models/engine.glb', (gltf)=>{
-  const model = gltf.scene;
-  scene.add(model);
-  model.updateMatrixWorld(true);
-
-  // Frame the camera onto the model's TRUE bbox center (don't move the model)
-  const box = new THREE.Box3().setFromObject(model);
-  const center = box.getCenter(new THREE.Vector3());
-  const size = box.getSize(new THREE.Vector3());
-  const diag = size.length();
-  camera.near = diag / 1000; camera.far = diag * 10; camera.updateProjectionMatrix();
-  const dist = (diag * 0.5) / Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * 1.1;
-  camera.position.set(center.x, center.y + diag * 0.06, center.z + dist);
-  controls.target.copy(center);
-  controls.minDistance = dist * 0.45;
-  controls.maxDistance = dist * 3;
-  controls.update();
-
-  // dump scene graph so we know if segments are separable
-  const graph = [];
-  model.traverse(o => { if (o.isMesh) graph.push({ name: o.name || '(unnamed)', parent: (o.parent && o.parent.name) || '', mat: (o.material && o.material.name) || '' }); });
-  window.__graph = graph;
-
-  document.getElementById('load').style.display='none';
-  window.__ready = true;
-
-  let mixer=null;
-  if (gltf.animations && gltf.animations.length){
-    mixer = new THREE.AnimationMixer(model);
-    gltf.animations.forEach(a=>mixer.clipAction(a).play());
-    window.__hasAnim = true;
-  }
-  const clock = new THREE.Clock();
-  (function loop(){ requestAnimationFrame(loop);
-    if(mixer) mixer.update(clock.getDelta());
-    controls.update(); renderer.render(scene,camera);
-  })();
-}, (ev)=>{
-  const el=document.getElementById('load');
-  if(ev.total) el.firstChild.textContent = '>_ cargando el motor '+Math.round(ev.loaded/ev.total*100)+'% ';
-}, (err)=>{
-  document.getElementById('load').textContent = '>_ error cargando el modelo';
-  console.error(err);
+// bands (outer phase arcs) — solid glossy phase color
+BANDS.forEach(b=>{
+  const geo=extrude(sectorShape(b.c-60+famGap, b.c+60-famGap, famRi, famRo), D_BAND);
+  const mesh=new THREE.Mesh(geo, phaseMat(b.hex));
+  mesh.userData={kind:'band', phase:b.phase, hex:b.hex};
+  phaseGroups[b.phase].add(mesh); hitList.push(mesh);
 });
+// sectors (inner) — dark glossy + phase-colored edge + logo decal
+EDGES.forEach(e=>{
+  const geo=extrude(sectorShape(e.c-30+gap, e.c+30-gap, Ri, Ro), D_SEC);
+  const mesh=new THREE.Mesh(geo, darkMat());
+  mesh.userData={kind:'sector', phase:e.phase, hex:e.hex, word:e.word, lab:e.lab};
+  // phase-colored crisp edge
+  const edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo,30),
+    new THREE.LineBasicMaterial({color:e.hex, transparent:true, opacity:0.9}));
+  mesh.add(edges); mesh.userData.edges=edges;
+  // logo decal on the front face
+  const lk=lockupTexture(e.word, e.hex);
+  const dp=P(RL, e.c);
+  const dm=decal(lk.tex, lk.aspect, 150, [dp[0], dp[1], D_SEC/2+BEV+2]);
+  mesh.add(dm); mesh.userData.decal=dm;
+  phaseGroups[e.phase].add(mesh); hitList.push(mesh);
+});
+// core + hub logo + spinning rim
+const core=new THREE.Mesh(new THREE.CylinderGeometry(84,84,D_CORE,96,1),
+  new THREE.MeshPhysicalMaterial({color:0x0a0a0d,metalness:0.6,roughness:0.2,clearcoat:1,clearcoatRoughness:0.1,envMapIntensity:1.1}));
+core.rotation.x=Math.PI/2; wheel.add(core);
+const hubTex=hubTexture();
+const hub=decal(hubTex, 2, 150, [0,0,D_CORE/2+2]); wheel.add(hub);
+// spinning center rim (an arc that visibly rotates)
+const spinRim=new THREE.Mesh(new THREE.TorusGeometry(93, 3.2, 16, 96, Math.PI*1.7),
+  new THREE.MeshStandardMaterial({color:0x1E80F0,emissive:0x1E80F0,emissiveIntensity:1.4,metalness:0.4,roughness:0.3}));
+spinRim.position.z=D_CORE/2; wheel.add(spinRim);
+
+wheel.scale.setScalar(S);
+
+// frame camera to wheel bbox
+wheel.updateMatrixWorld(true);
+{ const box=new THREE.Box3().setFromObject(wheel); const size=box.getSize(new THREE.Vector3());
+  const diag=size.length(); const dist=(diag*0.5)/Math.tan(THREE.MathUtils.degToRad(camera.fov)/2)*1.12;
+  camera.position.set(0,0,dist); camera.lookAt(0,0,0); }
+
+document.getElementById('load').style.display='none';
+window.__ready=true;
+
+// ---------- interaction: hover illuminate ----------
+const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2(-2,-2);
+let hoverPhase=null;
+addEventListener('pointermove',e=>{ mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1; });
+function resize(){ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); }
+addEventListener('resize',resize); resize();
+
+// per-mesh target emissive for smooth illuminate/dim
+hitList.forEach(m=>{ m.userData.tEmis = (m.userData.kind==='band')?0.14:0.0; m.userData.tDim=1; });
+
+function updateHover(){
+  ray.setFromCamera(mouse,camera);
+  const hits=ray.intersectObjects(hitList,false);
+  hoverPhase = hits.length ? hits[0].object.userData.phase : null;
+  const hint=document.getElementById('hint');
+  if(hoverPhase){ const b=BANDS.find(x=>x.phase===hoverPhase); hint.textContent='fase · '+b.name.toLowerCase(); hint.style.color=hx(b.hex); }
+  else { hint.textContent='pasa el mouse por cada fase o servicio'; hint.style.color=''; }
+  hitList.forEach(m=>{
+    const on = hoverPhase && m.userData.phase===hoverPhase;
+    const dimmed = hoverPhase && m.userData.phase!==hoverPhase;
+    m.userData.tDim = dimmed ? 0.28 : 1;
+    if(m.userData.kind==='sector') m.userData.tEmis = on ? 0.9 : 0.0;
+    else m.userData.tEmis = on ? 0.55 : 0.14;
+  });
+}
+
+// ---------- animate: float + wobble + spin rim ----------
+let t=0;
+function loop(){
+  requestAnimationFrame(loop); t+=0.016;
+  updateHover();
+  // float + gentle wobble (wheel does NOT follow mouse)
+  wheel.position.y = Math.sin(t*0.9)*0.06;
+  wheel.rotation.x = Math.sin(t*0.7)*0.06;
+  wheel.rotation.y = Math.sin(t*0.5)*0.08;
+  spinRim.rotation.z -= 0.012;
+  // smooth emissive + dim
+  hitList.forEach(m=>{
+    const mat=m.material;
+    mat.emissiveIntensity += (m.userData.tEmis - mat.emissiveIntensity)*0.12;
+    const tgt=m.userData.tDim;
+    mat.opacity += ((tgt<1?tgt:1) - (mat.opacity||1))*0.12;
+    mat.transparent = mat.opacity<0.999;
+    if(m.userData.edges){ m.userData.edges.material.opacity += ((tgt<1?0.25:0.9)-m.userData.edges.material.opacity)*0.12; }
+    if(m.userData.decal){ m.userData.decal.material.opacity += ((tgt<1?0.35:1)-m.userData.decal.material.opacity)*0.12; }
+  });
+  renderer.render(scene,camera);
+}
+loop();
 </script>
 </body></html>
