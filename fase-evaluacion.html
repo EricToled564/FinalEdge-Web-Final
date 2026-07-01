@@ -1,0 +1,93 @@
+<!doctype html><html lang="es"><head><meta charset="utf8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Final Edge — Fase 01 · Evaluación</title>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<style>
+:root{--bg:#0E0E12;--panel:#0B0B0E;--card:#0A0A0C;--hair:#1A1A1E;--fg:#F4F4F2;--fg2:#C6C6CC;--mut:#A0A0A8;--faint:#7E7E88;--accent:#1E80F0;--eval:#F4920C;--cap:#15D9D9;--exe:#E15CDB}
+*{box-sizing:border-box;margin:0}body{background:var(--bg);color:var(--fg);font-family:"Geist Mono",monospace;--ph:var(--eval)}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 40px}
+/* header */
+.hdr{position:sticky;top:0;z-index:9;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(14,14,18,.85);backdrop-filter:blur(8px);border-bottom:1px solid #16161A}
+.hdr img{height:30px}
+.hdr .nav{display:flex;gap:26px;align-items:center;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.hdr .cta{border:1px solid var(--accent);color:var(--accent);padding:9px 15px;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+/* opener */
+.open{padding:90px 0 30px}
+.eyebrow{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--ph);margin-bottom:26px}
+.num{font-size:clamp(60px,10vw,120px);font-weight:600;letter-spacing:-.06em;line-height:.82;color:var(--accent)}
+.rule{display:flex;align-items:center;gap:18px;margin:14px 0 30px}
+.rule .line{flex:1;height:1px;background:var(--hair)}.rule .idx{font-size:14px;color:var(--faint);letter-spacing:.14em}
+h1{font-size:clamp(40px,7vw,76px);font-weight:600;letter-spacing:-.05em;line-height:.95;margin-bottom:22px}
+.lead{font-size:19px;line-height:1.6;color:var(--fg2);max-width:64ch}
+/* phase stepper */
+.stepper{display:flex;gap:1px;background:var(--hair);border:1px solid var(--hair);margin:40px 0 8px}
+.step{flex:1;background:var(--card);padding:16px 20px;display:flex;gap:12px;align-items:baseline}
+.step .n{font-size:13px;color:var(--faint)}.step .nm{font-size:15px;color:var(--mut)}
+.step.on{background:#100b04}.step.on .nm{color:var(--ph)}.step.on{border-top:2px solid var(--ph)}
+/* services grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);margin:44px 0}
+.svc{background:var(--card);padding:40px;border-top:1px solid var(--hair);min-height:200px;display:flex;flex-direction:column}
+.svc h3{font-size:30px;font-weight:600;letter-spacing:-.03em;margin-bottom:14px}
+.svc p{font-size:16px;line-height:1.6;color:var(--mut);margin-bottom:auto}
+.svc .go{margin-top:26px;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+/* next + cta */
+.next{display:flex;justify-content:space-between;align-items:center;padding:26px 0;border-top:1px solid var(--hair)}
+.next .lbl{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.next .go{font-size:20px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:12px}
+.next .go .dot{width:9px;height:9px;background:var(--cap);flex:none}
+.plate{background:var(--accent);color:#fff;padding:64px 0;margin-top:20px}
+.plate h2{font-size:clamp(30px,5vw,52px);font-weight:600;letter-spacing:-.04em;margin-bottom:18px}
+.plate p{font-size:18px;color:rgba(255,255,255,.9);max-width:56ch;margin-bottom:28px}
+.plate .btn{display:inline-block;border:1px solid #fff;color:#fff;padding:14px 24px;font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+.foot{padding:40px;text-align:center;color:var(--faint);font-size:13px;letter-spacing:.1em}
+@media(max-width:720px){
+.hdr,.wrap{padding-left:22px;padding-right:22px}.hdr .nav{display:none}
+.open{padding:60px 0 20px}.stepper{flex-direction:column}.grid{grid-template-columns:1fr}
+.next{flex-direction:column;gap:14px;align-items:flex-start}
+}
+</style></head><body>
+<div class="hdr"><a href="index.html"><img src="assets/img/logos/logo-mono-light.png" alt="Final Edge"></a>
+ <div class=nav><span>Final Edge Engine</span><span>Casos</span><span>Nosotros</span><span style=color:#F4F4F2>ES</span>|<span>EN</span></div>
+ <span class=cta>&gt;_ Valoración</span></div>
+
+<div class=wrap>
+ <div class=open>
+  <div class=eyebrow>&gt;_ FASE 01</div>
+  <div class=num>01</div>
+  <div class=rule><span class=line></span><span class=idx>01 / 03</span></div>
+  <h1>Evaluación</h1>
+  <p class=lead>Inteligencia de mercado, análisis competitivo y planeación estratégica, potenciados integralmente por inteligencia artificial. Antes de tocar una sola herramienta, decidimos dónde la IA mueve tu margen.</p>
+
+  <div class=stepper>
+   <div class="step on"><span class=n>01</span><span class=nm>Evaluación</span></div>
+   <div class=step><span class=n>02</span><span class=nm>Capacidades</span></div>
+   <div class=step><span class=n>03</span><span class=nm>Ejecución</span></div>
+  </div>
+ </div>
+
+ <div class=grid>
+  <div class=svc>
+   <h3>Business Intelligence</h3>
+   <p>Investigación de mercado e insights competitivos con IA.</p>
+   <span class=go>Conoce más →</span>
+  </div>
+  <div class=svc>
+   <h3>Estrategia</h3>
+   <p>Framework estratégico para tu hoja de ruta con IA.</p>
+   <span class=go>Conoce más →</span>
+  </div>
+ </div>
+
+ <div class=next><span class=lbl>Siguiente fase</span><span class=go><span class=dot></span>Capacidades →</span></div>
+</div>
+
+<div class=plate>
+ <div class=wrap>
+  <h2>La competencia te entrega promedio. Final Edge te entrega la ventaja.</h2>
+  <p>Empieza por una reunión de valoración. Nuestro asistente de IA te acompaña y te ayuda a agendar en minutos.</p>
+  <span class=btn>&gt;_ Agenda tu reunión de valoración →</span>
+ </div>
+</div>
+<div class=foot>&gt;_ final edge [AI] · La IA ejecuta. La experiencia decide.</div>
+</body></html>
