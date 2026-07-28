@@ -47,6 +47,7 @@
     });
 
     localStorage.setItem(KEY, lang);
+    document.dispatchEvent(new CustomEvent("fe:lang", { detail: { lang: lang } }));
   }
 
   function initLangToggle() {

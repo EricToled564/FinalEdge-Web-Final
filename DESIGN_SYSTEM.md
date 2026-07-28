@@ -112,3 +112,50 @@ Animación obligatoria única: cursor parpadeante `1.2s steps(1)`. Sin rebotes/s
 
 > Pendiente de fases siguientes según indicación: *"crea solo el diseño de la página principal
 > antes de continuar con el resto"*. La rueda ENGINE™ en SVG se construirá en la página de El Engine.
+
+---
+
+## §MOTION v2 — Sistema ">_ OS" (transiciones + storytelling)
+
+El símbolo `>_` deja de ser decoración: es el **sistema operativo de la página**.
+Mezcla verificada de 5 referentes (código de producción extraído / frames de video):
+Terminal Industries (Rejouice), Lazarev.agency, Subduxion, TRIONN, Microsoft AI.
+
+### Gramática de movimiento (curvas medidas en los referentes)
+| Uso | Curva | Duración |
+|---|---|---|
+| Movimiento (reveals) | `cubic-bezier(.19,1,.22,1)` expo-out | 600–700ms |
+| Opacidad | `cubic-bezier(.39,.575,.565,1)` sine-out | 300–600ms |
+| Hover | `ease` | 200ms |
+| Ambiente (glow) | sine-out | 1100ms (Microsoft AI band-fade) |
+| Stagger | 80ms por elemento · 60ms por log-line | tope 480ms |
+
+### Piezas del sistema
+1. **Boot** (`#boot`): 4 líneas tecleadas (~12ms/char), cursor bloque azul,
+   1 vez por sesión, `< 1.7s`, clic/tecla lo salta, reduced-motion lo elimina.
+   *(Terminal Ind. logo-boot + TRIONN preloader.)*
+2. **Eyebrows comando** `>_ 01 · SECCIÓN`: prompt azul + índice + label tecleado
+   con **hot edge** (último carácter en Edge Blue antes de asentarse).
+   *(Terminal Ind. typed headlines + Subduxion `/ LABEL` indexado.)*
+3. **Decode**: h1/h2 resuelven desde ruido `!<>-_\/[]{}` , ≤880ms, ease-out.
+4. **Manifiesto** (`.manifesto`): `hero.lead` palabra por palabra gris→blanco
+   scrubbed por scroll. *(Terminal Ind. dream sequence.)*
+5. **Contadores**: stats cuentan 0→N en 1s al entrar. *(Lazarev/Terminal odometer.)*
+6. **Casos como log-lines**: `> caso … `, stagger 60ms. *(Terminal OS-readouts.)*
+7. **HUD** (`#hud`): índice 01–07 fijo a la derecha + barra de progreso 1px,
+   activo en Edge Blue, desktop ≥880px. *(Subduxion.)*
+8. **Glow ambiental** (`#glow`): 2 radiales Edge Blue α≤7.5%, fade 1.1s cuando
+   una sección `data-glow` cruza el centro del viewport. *(Microsoft AI, port oscuro.)*
+9. **Asistente `>_`** (`#term`, `terminal.js`): terminal interactiva real en el
+   plate — comandos `fases/casos/ventaja/valoracion/ayuda` (ES/EN), señales
+   `[ok]`, previsualización de intención en `valoracion`, legibilidad de fallos
+   en comando desconocido. Todo el contenido sale de `FE_I18N` (nada inventado).
+   Auto-demo al entrar en viewport. *(Lazarev "el sitio es la demo" + Agentic UX.)*
+
+### Reglas duras
+- Sin JS todo es visible (los estados ocultos los arma JS). `prefers-reduced-motion`
+  desactiva boot/glow/scrub y muestra todo.
+- Acento: Edge Blue marca SOLO cosas vivas (hot edge, HUD activo, prompt, tags);
+  nunca >2% del viewport. *(Regla observada en Terminal Industries.)*
+- Logos intocables, mínimos del brand book (≥160px). Paleta intocable.
+- Contenido = las 80 llaves de `i18n.js`, ES/EN, sin inventar ni omitir.
