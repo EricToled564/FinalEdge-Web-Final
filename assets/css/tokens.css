@@ -35,8 +35,9 @@
   --color-info:    #1E80F0;
 
   /* ---- type families ---------------------------------------------------- */
-  --font-ui:   "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace; /* leads EVERYTHING */
-  --font-read: "Geist", system-ui, -apple-system, sans-serif;               /* ONLY long dense body */
+  --font-ui:   "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace; /* SYSTEM voice: labels, prompts, readouts */
+  --font-read: "Geist", system-ui, -apple-system, sans-serif;               /* body copy */
+  --font-display: "Geist", system-ui, -apple-system, sans-serif;            /* HUMAN voice: display headlines */
 
   /* ---- type scale (Geist Mono) ----------------------------------------- */
   --text-display:   clamp(38px, 7.2vw, 56px); /* hero H1 · capped 56px · tight mono */
